@@ -18,7 +18,11 @@
     }
 
     /* Center the modal */
-    #planModal { 
+    #planModal.hidden { 
+      display: none !important;
+    }
+    
+    #planModal:not(.hidden) {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -95,40 +99,41 @@
           <p class="text-blue-400 text-xl font-bold mb-4">$2 one-time</p>
           <p class="text-gray-400 mb-6" data-en="Basic showcase plan. Includes startup monitoring and instant alerts." data-ru="Базовый план с мониторингом запуска и немедленными оповещениями.">Basic showcase plan. Includes startup monitoring and instant alerts.</p>
           <ul id="watch-features" class="text-left text-sm space-y-2 mb-6">
-            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Starts silently with Windows" data-ru="Запуск вместе с Windows без звука">Starts silently with Windows</span></li>
-            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Instant alerts via Telegram" data-ru="Мгновенные оповещения через Telegram">Instant alerts via Telegram</span></li>
-            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="System Status button (CPU/RAM usage)" data-ru="Кнопка статуса системы (загрузка CPU/RAM)">System Status button (CPU/RAM usage)</span></li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Silent Windows startup with stealth mode" data-ru="Скрытый запуск с Windows в режиме невидимости">Silent Windows startup with stealth mode</span></li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Real-time Telegram alerts with screenshots" data-ru="Мгновенные уведомления в Telegram со скриншотами">Real-time Telegram alerts with screenshots</span></li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Advanced system monitoring (CPU/RAM/Processes)" data-ru="Расширенный мониторинг системы (CPU/RAM/Процессы)">Advanced system monitoring (CPU/RAM/Processes)</span></li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Basic intrusion detection and logging" data-ru="Базовое обнаружение вторжений и ведение журнала">Basic intrusion detection and logging</span></li>
           </ul>
           <button onclick="openModal('watcher')" class="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded transition transform hover:scale-105" data-en="View Details" data-ru="Подробнее">View Details</button>
         </div>
 
         <!-- Guardian Plan -->
         <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-green-500/30 hover:ring-2 hover:ring-offset-2 hover:ring-green-400 hover:bg-opacity-95 transition-all duration-300 transform hover:scale-[1.02] relative">
-          <span class="inline-block bg-yellow-400 text-black text-xs px-3 py-1 rounded-full font-semibold mb-2 absolute top-2 left-2" data-en="Most Popular" data-ru="Самый популярный">Most Popular</span>
           <h4 id="guard-title" class="text-2xl font-semibold mb-2" data-en="Guardian Trial" data-ru="Пробный вариант Guardian">Guardian Trial</h4>
           <p class="text-green-400 text-xl font-bold mb-4">$19.99/year</p>
           <p class="text-gray-400 mb-6" data-en="Includes all Watcher features plus system control and USB detection." data-ru="Включает все функции Watcher плюс управление системой и обнаружение USB.">Includes all Watcher features plus system control and USB detection.</p>
           <ul id="guard-features" class="text-left text-sm space-y-2 mb-6">
-            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="All Watcher Features" data-ru="Все функции пробной версии Watcher">All Watcher Features</span></li>
-            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Yes, it’s me confirmation" data-ru="Подтверждение «Да, это я»">Yes, it’s me confirmation</span></li>
-            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Lock PC / Screenshot / Shutdown" data-ru="Блокировка ПК / Скриншот / Выключение">Lock PC / Screenshot / Shutdown</span></li>
-            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Show Details (Task Manager style)" data-ru="Показать детали (стиль диспетчера задач)">Show Details (Task Manager style)</span></li>
-            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="USB Plug Detection" data-ru="Обнаружение подключения USB">USB Plug Detection</span></li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="All enhanced Watcher features included" data-ru="Все расширенные функции Watcher включены">All enhanced Watcher features included</span></li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Interactive user verification system" data-ru="Интерактивная система проверки пользователя">Interactive user verification system</span></li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Remote PC control (Lock/Screenshot/Shutdown)" data-ru="Удаленное управление ПК (Блокировка/Скриншот/Выключение)">Remote PC control (Lock/Screenshot/Shutdown)</span></li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Auto PC lock on suspicious activity detection" data-ru="Автоматическая блокировка ПК при обнаружении подозрительной активности">Auto PC lock on suspicious activity detection</span></li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="USB device monitoring and alerts" data-ru="Мониторинг USB-устройств и оповещения">USB device monitoring and alerts</span></li>
           </ul>
           <button onclick="openModal('guardian')" class="mt-4 bg-green-600 hover:bg-green-700 px-4 py-2 rounded transition transform hover:scale-105" data-en="View Details" data-ru="Подробнее">View Details</button>
         </div>
 
         <!-- Commander Plan -->
-        <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-purple-500/30 hover:ring-2 hover:ring-offset-2 hover:ring-purple-400 hover:bg-opacity-95 transition-all duration-300 transform hover:scale-[1.02]">
+        <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-purple-500/30 hover:ring-2 hover:ring-offset-2 hover:ring-purple-400 hover:bg-opacity-95 transition-all duration-300 transform hover:scale-[1.02] relative">
+          <span class="inline-block bg-yellow-400 text-black text-xs px-3 py-1 rounded-full font-semibold mb-2 absolute top-2 left-2" data-en="Most Popular" data-ru="Самый популярный">Most Popular</span>
           <h4 id="command-title" class="text-2xl font-semibold mb-2" data-en="Commander Trial" data-ru="Пробный вариант Commander">Commander Trial</h4>
           <p class="text-purple-400 text-xl font-bold mb-4">$39.99/year</p>
           <p class="text-gray-400 mb-6" data-en="Full cyber defense tools to prevent remote hacker access." data-ru="Полные инструменты киберзащиты для предотвращения удаленного доступа хаккеров.">Full cyber defense tools to prevent remote hacker access.</p>
           <ul id="command-features" class="text-left text-sm space-y-2 mb-6">
-            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="All Guardian Features" data-ru="Все функции пробной версии Guardian">All Guardian Features</span></li>
-            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Suspicion Scoring System" data-ru="Система оценки подозрительности">Suspicion Scoring System</span></li>
-            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Auto Internet Shutdown" data-ru="Автоматическое отключение интернета">Auto Internet Shutdown</span></li>
-            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Webcam & Microphone Monitoring" data-ru="Контроль веб-камеры и микрофона">Webcam & Microphone Monitoring</span></li>
-            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="RAT Detection" data-ru="Обнаружение RAT-программ">RAT Detection</span></li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="All Guardian features plus advanced security" data-ru="Все функции Guardian плюс расширенная безопасность">All Guardian features plus advanced security</span></li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="AI-powered threat scoring and analysis" data-ru="ИИ-анализ угроз и система оценки">AI-powered threat scoring and analysis</span></li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Automatic internet disconnection on threats" data-ru="Автоматическое отключение интернета при угрозах">Automatic internet disconnection on threats</span></li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Privacy device monitoring (webcam/microphone)" data-ru="Мониторинг устройств конфиденциальности (веб-камера/микрофон)">Privacy device monitoring (webcam/microphone)</span></li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✔️</span><span data-en="Advanced RAT and malware detection" data-ru="Расширенное обнаружение RAT и вредоносного ПО">Advanced RAT and malware detection</span></li>
           </ul>
           <button onclick="openModal('commander')" class="mt-4 bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded transition transform hover:scale-105" data-en="View Details" data-ru="Подробнее">View Details</button>
         </div>
@@ -138,9 +143,11 @@
 
   <!-- Modal -->
   <div id="planModal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50 p-4">
-    <div class="bg-gray-800 rounded-lg p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto animate-fadeIn">
-      <button onclick="closeModal()" class="float-right text-xl">×</button>
-      <h3 id="modalTitle" class="text-2xl font-bold mb-4">Plan Details</h3>
+    <div class="bg-gray-800 rounded-lg p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto animate-fadeIn relative">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-700 transition-colors" title="Close">
+        ×
+      </button>
+      <h3 id="modalTitle" class="text-2xl font-bold mb-4 pr-10">Plan Details</h3>
       <h4 id="modalUsage" class="text-xl font-semibold mt-6 mb-3 bg-gradient-to-r from-blue-400 to-green-400 text-transparent bg-clip-text">Usage of Plan</h4>
       <ul id="modalFeatures" class="list-disc pl-5 text-gray-400 mb-6">
         <li>Loading...</li>
@@ -306,23 +313,31 @@
         },
         features: {
           watcher: [
-            "Starts silently with Windows",
-            "Instant alerts via Telegram",
-            "System Status button (CPU/RAM usage)"
+            "Silent startup with Windows boot sequence",
+            "Real-time Telegram notifications for system events",
+            "Live system monitoring (CPU/RAM/Disk usage)",
+            "Basic intrusion detection alerts",
+            "Lightweight background operation"
           ],
           guardian: [
-            "All Watcher Features",
-            "Yes, it’s me confirmation",
-            "Lock PC / Screenshot / Shutdown",
-            "Show Details (Task Manager style)",
-            "USB Plug Detection"
+            "All Watcher monitoring capabilities",
+            "Two-factor authentication via 'Yes, it's me' confirmation",
+            "Remote PC lock with automatic screenshot capture",
+            "Emergency shutdown with evidence preservation",
+            "Advanced system details (Task Manager-style interface)",
+            "USB device insertion/removal detection",
+            "Auto PC lock on suspicious activity detection",
+            "Enhanced security response protocols"
           ],
           commander: [
-            "All Guardian Features",
-            "Suspicion Scoring System",
-            "Auto Internet Shutdown",
-            "Webcam & Microphone Monitoring",
-            "RAT Detection"
+            "Complete Guardian security suite",
+            "AI-powered suspicion scoring with threat assessment",
+            "Automatic internet disconnection on high-risk events",
+            "Real-time webcam monitoring with motion detection",
+            "Microphone surveillance with audio analysis",
+            "Advanced RAT (Remote Access Trojan) detection engine",
+            "Behavioral analysis and anomaly detection",
+            "Comprehensive forensic logging and reporting"
           ]
         }
       },
@@ -340,23 +355,31 @@
         },
         features: {
           watcher: [
-            "Запуск вместе с Windows без звука",
-            "Мгновенные оповещения через Telegram",
-            "Кнопка статуса системы (загрузка CPU/RAM)"
+            "Скрытый запуск при загрузке Windows",
+            "Уведомления в реальном времени через Telegram",
+            "Мониторинг системы в реальном времени (CPU/RAM/Диск)",
+            "Базовые оповещения о вторжениях",
+            "Легкая фоновая работа без нагрузки на систему"
           ],
           guardian: [
-            "Все функции пробной версии Watcher",
-            "Подтверждение «Да, это я»",
-            "Блокировка ПК / Скриншот / Выключение",
-            "Показать детали (стиль диспетчера задач)",
-            "Обнаружение подключения USB"
+            "Все возможности мониторинга Watcher",
+            "Двухфакторная аутентификация через подтверждение 'Да, это я'",
+            "Удаленная блокировка ПК с автоматическим созданием скриншота",
+            "Экстренное выключение с сохранением улик",
+            "Расширенная информация о системе (интерфейс в стиле диспетчера задач)",
+            "Обнаружение подключения/отключения USB-устройств",
+            "Автоматическая блокировка ПК при обнаружении подозрительной активности",
+            "Усиленные протоколы реагирования на угрозы"
           ],
           commander: [
-            "Все функции пробной версии Guardian",
-            "Система оценки подозрительности",
-            "Автоматическое отключение интернета",
-            "Контроль веб-камеры и микрофона",
-            "Обнаружение RAT-программ"
+            "Полный пакет безопасности Guardian",
+            "ИИ-система оценки подозрительности с анализом угроз",
+            "Автоматическое отключение интернета при высоком риске",
+            "Мониторинг веб-камеры в реальном времени с детекцией движения",
+            "Наблюдение через микрофон с анализом аудио",
+            "Продвинутый движок обнаружения RAT (троянов удаленного доступа)",
+            "Поведенческий анализ и обнаружение аномалий",
+            "Комплексное криминалистическое логирование и отчетность"
           ]
         }
       }
@@ -393,6 +416,20 @@
     function closeModal() {
       document.getElementById('planModal').classList.add('hidden');
     }
+
+    // Close modal when clicking outside of it
+    document.getElementById('planModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
 
     function toggleLanguage() {
       currentLang = currentLang === 'en' ? 'ru' : 'en';
