@@ -557,7 +557,16 @@
                 country: country
               })
             })
-            .then(response => response.json())
+            .then(response => {
+              // Check if response is actually JSON
+              const contentType = response.headers.get('content-type');
+              if (!contentType || !contentType.includes('application/json')) {
+                throw new Error(currentLang === 'en' ? 
+                  'Server error: Payment server may not be running. Please contact support.' : 
+                  'Ошибка сервера: Сервер оплаты может не работать. Обратитесь в поддержку.');
+              }
+              return response.json();
+            })
             .then(data => {
               if (data.approval_url) {
                 // Redirect to PayPal for approval
@@ -568,6 +577,7 @@
               }
             })
             .catch(error => {
+              console.error('Payment creation error:', error);
               alert(currentLang === 'en' ? 'Payment creation failed: ' + error.message : 'Ошибка создания платежа: ' + error.message);
             });
           },
@@ -583,7 +593,16 @@
                 payerID: data.payerID
               })
             })
-            .then(response => response.json())
+            .then(response => {
+              // Check if response is actually JSON
+              const contentType = response.headers.get('content-type');
+              if (!contentType || !contentType.includes('application/json')) {
+                throw new Error(currentLang === 'en' ? 
+                  'Server error: Payment server may not be running. Please contact support.' : 
+                  'Ошибка сервера: Сервер оплаты может не работать. Обратитесь в поддержку.');
+              }
+              return response.json();
+            })
             .then(result => {
               if (result.success) {
                 alert(currentLang === 'en' ? 
@@ -712,7 +731,16 @@
             }
           })
         })
-        .then(response => response.json())
+        .then(response => {
+          // Check if response is actually JSON
+          const contentType = response.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            throw new Error(currentLang === 'en' ? 
+              'Server error: Payment server may not be running. Please contact support.' : 
+              'Ошибка сервера: Сервер оплаты может не работать. Обратитесь в поддержку.');
+          }
+          return response.json();
+        })
         .then(result => {
           submitButton.disabled = false;
           submitButton.innerHTML = originalText;
@@ -735,6 +763,7 @@
         .catch(error => {
           submitButton.disabled = false;
           submitButton.innerHTML = originalText;
+          console.error('Card payment error:', error);
           alert(currentLang === 'en' ? 'Payment failed: ' + error.message : 'Ошибка оплаты: ' + error.message);
         });
       });
