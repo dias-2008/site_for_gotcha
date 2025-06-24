@@ -307,15 +307,15 @@
       <h3 class="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-blue-500 to-green-400 text-transparent bg-clip-text" data-en="Contact Us" data-ru="Свяжитесь с нами">Contact Us</h3>
       <form id="contactForm" class="space-y-4">
         <div class="relative">
-          <input type="text" placeholder="Your Name" class="w-full p-3 pl-10 bg-gray-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" required />
+          <input type="text" name="name" placeholder="Your Name" class="w-full p-3 pl-10 bg-gray-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" required />
           <span class="absolute left-3 top-3 text-gray-400">👤</span>
         </div>
         <div class="relative">
-          <input type="email" placeholder="Your Email" class="w-full p-3 pl-10 bg-gray-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" required />
+          <input type="email" name="email" placeholder="Your Email" class="w-full p-3 pl-10 bg-gray-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" required />
           <span class="absolute left-3 top-3 text-gray-400">📧</span>
         </div>
         <div class="relative">
-          <textarea rows="5" placeholder="Message" class="w-full p-3 pl-10 bg-gray-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" required></textarea>
+          <textarea rows="5" name="message" placeholder="Message" class="w-full p-3 pl-10 bg-gray-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" required></textarea>
           <span class="absolute left-3 top-3 text-gray-400">💬</span>
         </div>
         <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600 p-3 rounded-xl transition transform hover:scale-105 flex items-center justify-center gap-2">
@@ -772,7 +772,59 @@
     // Contact Form Submission
     document.getElementById('contactForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      alert(currentLang === 'en' ? '✅ Your message has been sent!' : '✅ Ваше сообщение отправлено!');
+      
+      const formData = new FormData(e.target);
+      const name = formData.get('name');
+      const email = formData.get('email');
+      const message = formData.get('message');
+      
+      const submitButton = e.target.querySelector('button[type="submit"]');
+      const originalText = submitButton.innerHTML;
+      submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (currentLang === 'en' ? 'Sending...' : 'Отправка...');
+      submitButton.disabled = true;
+      
+      // Send contact form data to server
+      fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          message: message
+        })
+      })
+      .then(response => {
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error(currentLang === 'en' ? 
+            'Server error: Contact server may not be running. Please try again later.' : 
+            'Ошибка сервера: Сервер контактов может не работать. Попробуйте позже.');
+        }
+        return response.json();
+      })
+      .then(result => {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalText;
+        
+        if (result.success) {
+          alert(currentLang === 'en' ? 
+            '✅ Your message has been sent successfully! We will get back to you soon.' : 
+            '✅ Ваше сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.');
+          e.target.reset();
+        } else {
+          throw new Error(result.error || 'Failed to send message');
+        }
+      })
+      .catch(error => {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalText;
+        console.error('Contact form error:', error);
+        alert(currentLang === 'en' ? 
+          'Failed to send message: ' + error.message : 
+          'Не удалось отправить сообщение: ' + error.message);
+      });
     });
 
     // Initial translation
