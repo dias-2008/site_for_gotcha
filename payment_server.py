@@ -215,6 +215,33 @@ def index():
     """Main page with payment interface"""
     return render_template_string(open('site.html').read())
 
+@app.route('/api/health')
+def health_check():
+    """Health check endpoint for Railway deployment"""
+    try:
+        # Check database connection
+        conn = sqlite3.connect('payments.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT 1')
+        conn.close()
+        
+        # Check PayPal configuration
+        if not os.getenv('PAYPAL_CLIENT_ID') or not os.getenv('PAYPAL_CLIENT_SECRET'):
+            return jsonify({'status': 'unhealthy', 'error': 'PayPal configuration missing'}), 500
+            
+        # Check email configuration
+        if not os.getenv('EMAIL_ADDRESS') or not os.getenv('EMAIL_PASSWORD'):
+            return jsonify({'status': 'unhealthy', 'error': 'Email configuration missing'}), 500
+            
+        return jsonify({
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'paypal_mode': os.getenv('PAYPAL_MODE', 'sandbox'),
+            'products': list(PRODUCTS.keys())
+        })
+    except Exception as e:
+        return jsonify({'status': 'unhealthy', 'error': str(e)}), 500
+
 @app.route('/api/create-payment', methods=['POST'])
 def create_payment():
     """Create PayPal payment"""
