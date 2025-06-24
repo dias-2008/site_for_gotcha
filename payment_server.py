@@ -237,20 +237,27 @@ def health_check():
         cursor.execute('SELECT 1')
         conn.close()
         
-        # Check PayPal configuration
-        if not config.PAYPAL_CLIENT_ID or not config.PAYPAL_CLIENT_SECRET:
-            return jsonify({'status': 'unhealthy', 'error': 'PayPal configuration missing'}), 500
-            
-        # Check email configuration
-        if not config.EMAIL_ADDRESS or not config.EMAIL_PASSWORD:
-            return jsonify({'status': 'unhealthy', 'error': 'Email configuration missing'}), 500
-            
-        return jsonify({
+        # Basic health check - server is running and database is accessible
+        health_status = {
             'status': 'healthy',
             'timestamp': datetime.now().isoformat(),
-            'paypal_mode': config.PAYPAL_MODE,
-            'products': list(PRODUCTS.keys())
-        })
+            'database': 'connected'
+        }
+        
+        # Add configuration status (non-critical for health check)
+        config_warnings = []
+        if not config.PAYPAL_CLIENT_ID or not config.PAYPAL_CLIENT_SECRET:
+            config_warnings.append('PayPal configuration missing')
+        if not config.EMAIL_ADDRESS or not config.EMAIL_PASSWORD:
+            config_warnings.append('Email configuration missing')
+            
+        if config_warnings:
+            health_status['warnings'] = config_warnings
+        else:
+            health_status['paypal_mode'] = config.PAYPAL_MODE
+            health_status['products'] = list(PRODUCTS.keys())
+            
+        return jsonify(health_status)
     except Exception as e:
         return jsonify({'status': 'unhealthy', 'error': str(e)}), 500
 
