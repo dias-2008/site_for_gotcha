@@ -242,6 +242,79 @@ def health_check():
     except Exception as e:
         return jsonify({'status': 'unhealthy', 'error': str(e)}), 500
 
+@app.route('/api/contact', methods=['POST'])
+def handle_contact():
+    """Handle contact form submissions"""
+    try:
+        data = request.get_json()
+        
+        # Validate required fields
+        name = data.get('name', '').strip()
+        email = data.get('email', '').strip()
+        message = data.get('message', '').strip()
+        
+        if not name or not email or not message:
+            return jsonify({
+                'success': False,
+                'error': 'All fields are required'
+            }), 400
+        
+        # Basic email validation
+        if '@' not in email or '.' not in email:
+            return jsonify({
+                'success': False,
+                'error': 'Invalid email address'
+            }), 400
+        
+        # Send email notification to you
+        try:
+            msg = MIMEMultipart()
+            msg['From'] = EMAIL_ADDRESS
+            msg['To'] = EMAIL_ADDRESS  # Send to yourself
+            msg['Subject'] = f"Contact Form Message from {name}"
+            
+            # Email body
+            body = f"""
+            New contact form submission:
+            
+            Name: {name}
+            Email: {email}
+            
+            Message:
+            {message}
+            
+            Sent at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+            """
+            
+            msg.attach(MIMEText(body, 'plain'))
+            
+            # Send email
+            server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+            server.starttls()
+            server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            text = msg.as_string()
+            server.sendmail(EMAIL_ADDRESS, EMAIL_ADDRESS, text)
+            server.quit()
+            
+            return jsonify({
+                'success': True,
+                'message': 'Message sent successfully'
+            })
+            
+        except Exception as email_error:
+            print(f"Email sending error: {email_error}")
+            return jsonify({
+                'success': False,
+                'error': 'Failed to send message. Please try again later.'
+            }), 500
+            
+    except Exception as e:
+        print(f"Contact form error: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Server error. Please try again later.'
+        }), 500
+
 @app.route('/api/create-payment', methods=['POST'])
 def create_payment():
     """Create PayPal payment"""
