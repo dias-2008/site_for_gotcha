@@ -19,6 +19,7 @@ from flask_cors import CORS
 import paypalrestsdk
 import zipfile
 import tempfile
+from config import Config
 
 # Load environment variables from .env file for local development
 try:
@@ -28,21 +29,32 @@ except ImportError:
     # dotenv not available in production, which is fine
     pass
 
+# Initialize configuration
+config = Config()
+
+# Validate configuration
+errors = config.validate()
+if errors:
+    print("Configuration errors:")
+    for error in errors:
+        print(f"  - {error}")
+    exit(1)
+
 app = Flask(__name__)
 CORS(app)
 
-# PayPal Configuration - Using Environment Variables
+# PayPal Configuration - Using Config Class
 paypalrestsdk.configure({
-    "mode": os.getenv("PAYPAL_MODE", "sandbox"),  # "sandbox" or "live"
-    "client_id": os.getenv("PAYPAL_CLIENT_ID"),
-    "client_secret": os.getenv("PAYPAL_CLIENT_SECRET")
+    "mode": config.PAYPAL_MODE,  # "sandbox" or "live"
+    "client_id": config.PAYPAL_CLIENT_ID,
+    "client_secret": config.PAYPAL_CLIENT_SECRET
 })
 
-# Email Configuration - Using Environment Variables
-SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
-SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
-EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+# Email Configuration - Using Config Class
+SMTP_SERVER = config.SMTP_SERVER
+SMTP_PORT = config.SMTP_PORT
+EMAIL_ADDRESS = config.EMAIL_ADDRESS
+EMAIL_PASSWORD = config.EMAIL_PASSWORD
 
 # Product Configuration
 PRODUCTS = {
@@ -226,17 +238,17 @@ def health_check():
         conn.close()
         
         # Check PayPal configuration
-        if not os.getenv('PAYPAL_CLIENT_ID') or not os.getenv('PAYPAL_CLIENT_SECRET'):
+        if not config.PAYPAL_CLIENT_ID or not config.PAYPAL_CLIENT_SECRET:
             return jsonify({'status': 'unhealthy', 'error': 'PayPal configuration missing'}), 500
             
         # Check email configuration
-        if not os.getenv('EMAIL_ADDRESS') or not os.getenv('EMAIL_PASSWORD'):
+        if not config.EMAIL_ADDRESS or not config.EMAIL_PASSWORD:
             return jsonify({'status': 'unhealthy', 'error': 'Email configuration missing'}), 500
             
         return jsonify({
             'status': 'healthy',
             'timestamp': datetime.now().isoformat(),
-            'paypal_mode': os.getenv('PAYPAL_MODE', 'sandbox'),
+            'paypal_mode': config.PAYPAL_MODE,
             'products': list(PRODUCTS.keys())
         })
     except Exception as e:
@@ -532,7 +544,13 @@ def validate_environment():
     
     missing_vars = []
     for var in required_vars:
-        if not os.getenv(var):
+        if var == 'PAYPAL_CLIENT_ID' and not config.PAYPAL_CLIENT_ID:
+            missing_vars.append(var)
+        elif var == 'PAYPAL_CLIENT_SECRET' and not config.PAYPAL_CLIENT_SECRET:
+            missing_vars.append(var)
+        elif var == 'EMAIL_ADDRESS' and not config.EMAIL_ADDRESS:
+            missing_vars.append(var)
+        elif var == 'EMAIL_PASSWORD' and not config.EMAIL_PASSWORD:
             missing_vars.append(var)
     
     if missing_vars:
@@ -555,6 +573,5 @@ if __name__ == '__main__':
     print("Database initialized")
     print("Available products:", list(PRODUCTS.keys()))
     
-    # Use PORT environment variable for Railway deployment
-    port = int(os.getenv('PORT', 5000))
-    app.run(debug=os.getenv('DEBUG', 'False').lower() == 'true', host='0.0.0.0', port=port)
+    # Use PORT from config for Railway deployment
+    app.run(debug=config.DEBUG, host='0.0.0.0', port=config.PORT)
