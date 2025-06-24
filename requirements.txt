@@ -1,41 +1,26 @@
 # Core dependencies
-# Core dependencies
-psutil>=5.9.0
-requests>=2.28.0
-python-dotenv>=1.0.0
+# Essential web server dependencies only
+# (Desktop monitoring dependencies removed for Railway deployment)
 
-# Windows API support
-pywin32>=306
-
-# Image processing
-Pillow>=9.0.0
-pyscreenshot>=3.0
-
-# Telegram Bot
-python-telegram-bot>=20.0
-pyTelegramBotAPI>=4.12.0
-
-# Machine Learning (optional but recommended)
-scikit-learn>=1.2.0
-numpy>=1.21.0
-
-# File system monitoring
-watchdog>=2.1.0
-
-# GUI support
-# tkinter is included with Python
-
-# Web server dependencies
-gunicorn==20.1.0
+# Core web framework
 Flask==2.3.3
 Flask-CORS==4.0.0
 Flask-SQLAlchemy==2.5.1
 SQLAlchemy==1.4.46
 Werkzeug<2.3.0
+
+# Web server
+gunicorn==20.1.0
+
+# Database
 psycopg2-binary>=2.9.3
 
 # Payment processing
 paypalrestsdk==1.13.3
+
+# Utilities
+requests>=2.28.0
+python-dotenv>=1.0.0
 
 # Development dependencies (optional)
 pytest>=7.0.0
