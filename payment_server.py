@@ -571,14 +571,18 @@ def validate_environment():
     print("✅ All required environment variables are set")
     return True
 
-if __name__ == '__main__':
-    if not validate_environment():
+# Initialize for both direct run and gunicorn
+if not validate_environment():
+    print("❌ Environment validation failed")
+    if __name__ == '__main__':
         exit(1)
-        
+else:
     init_database()
-    print("Payment server starting...")
-    print("Database initialized")
-    print("Available products:", list(PRODUCTS.keys()))
-    
+    print("✅ Payment server initialized")
+    print("✅ Database initialized")
+    print("✅ Available products:", list(PRODUCTS.keys()))
+
+if __name__ == '__main__':
+    print("🚀 Starting payment server in development mode...")
     # Use PORT from config for Railway deployment
     app.run(debug=config.DEBUG, host='0.0.0.0', port=config.PORT)
