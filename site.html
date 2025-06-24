@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gotcha - Real-Time PC Protection</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script> 
+  <!-- Tailwind CSS Local -->
+  <link href="./styles.css" rel="stylesheet"> 
   <!-- PayPal SDK -->
   <script src="https://www.paypal.com/sdk/js?client-id=AXnMBC1Osn6CrQ3LWymfkjqzRTVnx5A8tTy1NeZxzItfLKfHLyv7f6C4wjk6Am0HzZ56V0Abxa4tYOe_&components=buttons&currency=USD"></script>
   <style>
@@ -189,26 +189,26 @@
         <h4 class="text-xl font-bold mb-4" data-en="Your Information" data-ru="Ваша информация">Your Information</h4>
         <form id="user-info-form" class="space-y-4">
           <div class="relative">
-            <input type="email" id="user-email" placeholder="your-email@example.com" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" required />
-            <label class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Email Address" data-ru="Email адрес">Email Address</label>
+            <label for="user-email" class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Email Address" data-ru="Email адрес">Email Address</label>
+            <input type="email" id="user-email" name="email" placeholder="your-email@example.com" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" autocomplete="email" required />
           </div>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="relative">
-              <select id="product-selection" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" required>
+              <label for="product-selection" class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Product" data-ru="Продукт">Product</label>
+              <select id="product-selection" name="product" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" required>
                 <option value="" data-en="Select Plan" data-ru="Выберите план">Select Plan</option>
                 <option value="watcher" data-en="Watcher Trial - $2.00" data-ru="Watcher Trial - $2.00">Watcher Trial - $2.00</option>
                 <option value="guardian" data-en="Guardian Trial - $19.99" data-ru="Guardian Trial - $19.99">Guardian Trial - $19.99</option>
                 <option value="commander" data-en="Commander Trial - $39.99" data-ru="Commander Trial - $39.99">Commander Trial - $39.99</option>
               </select>
-              <label class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Product" data-ru="Продукт">Product</label>
             </div>
             <div class="relative">
-              <input type="text" id="user-name" placeholder="John Doe" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" required />
-              <label class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Full Name" data-ru="Полное имя">Full Name</label>
+              <label for="user-name" class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Full Name" data-ru="Полное имя">Full Name</label>
+              <input type="text" id="user-name" name="fullname" placeholder="John Doe" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" autocomplete="name" required />
             </div>
             <div class="relative">
-              <input type="text" id="user-country" placeholder="United States" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" />
-              <label class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Country (Optional)" data-ru="Страна (необязательно)">Country (Optional)</label>
+              <label for="user-country" class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Country (Optional)" data-ru="Страна (необязательно)">Country (Optional)</label>
+              <input type="text" id="user-country" name="country" placeholder="United States" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" autocomplete="country" />
             </div>
           </div>
         </form>
@@ -244,24 +244,24 @@
           <!-- Card Form -->
           <form id="card-payment-form" class="space-y-4">
             <div class="relative">
-              <input type="text" id="card-number" placeholder="1234 5678 9012 3456" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 outline-none transition" maxlength="19" required />
-              <label class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Card Number" data-ru="Номер карты">Card Number</label>
+              <label for="card-number" class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Card Number" data-ru="Номер карты">Card Number</label>
+              <input type="text" id="card-number" name="cardnumber" placeholder="1234 5678 9012 3456" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 outline-none transition" maxlength="19" autocomplete="cc-number" required />
             </div>
             
             <div class="grid grid-cols-2 gap-4">
               <div class="relative">
-                <input type="text" id="expiry-date" placeholder="MM/YY" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 outline-none transition" maxlength="5" required />
-                <label class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Expiry" data-ru="Срок">Expiry</label>
+                <label for="expiry-date" class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Expiry" data-ru="Срок">Expiry</label>
+                <input type="text" id="expiry-date" name="expiry" placeholder="MM/YY" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 outline-none transition" maxlength="5" autocomplete="cc-exp" required />
               </div>
               <div class="relative">
-                <input type="text" id="cvv" placeholder="123" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 outline-none transition" maxlength="4" required />
-                <label class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="CVV" data-ru="CVV">CVV</label>
+                <label for="cvv" class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="CVV" data-ru="CVV">CVV</label>
+                <input type="text" id="cvv" name="cvv" placeholder="123" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 outline-none transition" maxlength="4" autocomplete="cc-csc" required />
               </div>
             </div>
             
             <div class="relative">
-              <input type="text" id="cardholder-name" placeholder="John Doe" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 outline-none transition" required />
-              <label class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Cardholder Name" data-ru="Имя владельца">Cardholder Name</label>
+              <label for="cardholder-name" class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Cardholder Name" data-ru="Имя владельца">Cardholder Name</label>
+              <input type="text" id="cardholder-name" name="cardholder" placeholder="John Doe" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 outline-none transition" autocomplete="cc-name" required />
             </div>
             
             <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-blue-500 hover:from-green-700 hover:to-blue-600 p-3 rounded-lg transition transform hover:scale-105 flex items-center justify-center gap-2">
@@ -307,15 +307,18 @@
       <h3 class="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-blue-500 to-green-400 text-transparent bg-clip-text" data-en="Contact Us" data-ru="Свяжитесь с нами">Contact Us</h3>
       <form id="contactForm" class="space-y-4">
         <div class="relative">
-          <input type="text" name="name" placeholder="Your Name" class="w-full p-3 pl-10 bg-gray-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" required />
+          <label for="contact-name" class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Name" data-ru="Имя">Name</label>
+          <input type="text" id="contact-name" name="name" placeholder="Your Name" class="w-full p-3 pl-10 bg-gray-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" autocomplete="name" required />
           <span class="absolute left-3 top-3 text-gray-400">👤</span>
         </div>
         <div class="relative">
-          <input type="email" name="email" placeholder="Your Email" class="w-full p-3 pl-10 bg-gray-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" required />
+          <label for="contact-email" class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Email" data-ru="Email">Email</label>
+          <input type="email" id="contact-email" name="email" placeholder="Your Email" class="w-full p-3 pl-10 bg-gray-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" autocomplete="email" required />
           <span class="absolute left-3 top-3 text-gray-400">📧</span>
         </div>
         <div class="relative">
-          <textarea rows="5" name="message" placeholder="Message" class="w-full p-3 pl-10 bg-gray-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" required></textarea>
+          <label for="contact-message" class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Message" data-ru="Сообщение">Message</label>
+          <textarea id="contact-message" rows="5" name="message" placeholder="Message" class="w-full p-3 pl-10 bg-gray-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" required></textarea>
           <span class="absolute left-3 top-3 text-gray-400">💬</span>
         </div>
         <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600 p-3 rounded-xl transition transform hover:scale-105 flex items-center justify-center gap-2">
