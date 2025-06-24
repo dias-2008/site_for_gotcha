@@ -7,7 +7,7 @@
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script> 
   <!-- PayPal SDK -->
-  <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&components=buttons&currency=USD"></script>
+  <script src="https://www.paypal.com/sdk/js?client-id=AXnMBC1Osn6CrQ3LWymfkjqzRTVnx5A8tTy1NeZxzItfLKfHLyv7f6C4wjk6Am0HzZ56V0Abxa4tYOe_&components=buttons&currency=USD"></script>
   <style>
     .animate-fadeIn {
       animation: fadeIn 0.4s ease-out forwards;
@@ -182,7 +182,37 @@
   <!-- Payment Section -->
   <section id="payment" class="py-16 px-4 relative z-10 bg-gradient-to-r from-gray-800 to-gray-900">
     <div class="container mx-auto max-w-4xl text-center">
-      <h3 class="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-500 to-green-400 text-transparent bg-clip-text" data-en="Choose Payment Method" data-ru="Выберите способ оплаты">Choose Payment Method</h3>
+      <h3 class="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-500 to-green-400 text-transparent bg-clip-text" data-en="Choose Your Plan & Payment" data-ru="Выберите план и способ оплаты">Choose Your Plan & Payment</h3>
+      
+      <!-- User Information Form -->
+      <div class="bg-gray-800 rounded-xl p-6 mb-8 border border-gray-700">
+        <h4 class="text-xl font-bold mb-4" data-en="Your Information" data-ru="Ваша информация">Your Information</h4>
+        <form id="user-info-form" class="space-y-4">
+          <div class="relative">
+            <input type="email" id="user-email" placeholder="your-email@example.com" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" required />
+            <label class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Email Address" data-ru="Email адрес">Email Address</label>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="relative">
+              <select id="product-selection" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" required>
+                <option value="" data-en="Select Plan" data-ru="Выберите план">Select Plan</option>
+                <option value="watcher" data-en="Watcher Trial - $2.00" data-ru="Watcher Trial - $2.00">Watcher Trial - $2.00</option>
+                <option value="guardian" data-en="Guardian Trial - $19.99" data-ru="Guardian Trial - $19.99">Guardian Trial - $19.99</option>
+                <option value="commander" data-en="Commander Trial - $39.99" data-ru="Commander Trial - $39.99">Commander Trial - $39.99</option>
+              </select>
+              <label class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Product" data-ru="Продукт">Product</label>
+            </div>
+            <div class="relative">
+              <input type="text" id="user-name" placeholder="John Doe" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" required />
+              <label class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Full Name" data-ru="Полное имя">Full Name</label>
+            </div>
+            <div class="relative">
+              <input type="text" id="user-country" placeholder="United States" class="w-full p-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" />
+              <label class="absolute -top-2 left-3 bg-gray-800 px-1 text-xs text-gray-400" data-en="Country (Optional)" data-ru="Страна (необязательно)">Country (Optional)</label>
+            </div>
+          </div>
+        </form>
+      </div>
       
       <!-- Payment Options -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
@@ -193,8 +223,12 @@
           </div>
           <h4 class="text-xl font-bold mb-2" data-en="PayPal" data-ru="PayPal">PayPal</h4>
           <p class="text-gray-400 mb-4" data-en="Secure checkout with PayPal" data-ru="Безопасная оплата через PayPal">Secure checkout with PayPal</p>
+          <div id="selected-product-info" class="mb-4 p-3 bg-gray-700 rounded-lg hidden">
+            <p class="text-sm text-gray-300"><span data-en="Selected:" data-ru="Выбрано:">Selected:</span> <span id="selected-product-name"></span></p>
+            <p class="text-lg font-bold text-green-400">$<span id="selected-product-price">0.00</span></p>
+          </div>
           <div id="paypal-button-container" class="min-h-[50px]">
-            <!-- PayPal buttons will appear here -->
+            <p class="text-gray-500 text-sm" data-en="Please fill in your information and select a plan above" data-ru="Пожалуйста, заполните информацию и выберите план выше">Please fill in your information and select a plan above</p>
           </div>
         </div>
         
@@ -445,10 +479,59 @@
     document.getElementById('languageToggle').addEventListener('click', toggleLanguage);
     document.getElementById('languageToggleMobile').addEventListener('click', toggleLanguage);
 
-    // Initialize PayPal Buttons
-    window.onload = function () {
+    // Product prices
+    const productPrices = {
+      'watcher': { name: 'Watcher Trial', price: 2.00 },
+      'guardian': { name: 'Guardian Trial', price: 19.99 },
+      'commander': { name: 'Commander Trial', price: 39.99 }
+    };
+
+    let currentPayPalButtons = null;
+
+    function updateProductSelection() {
+      const productSelect = document.getElementById('product-selection');
+      const selectedProduct = productSelect.value;
+      const productInfo = document.getElementById('selected-product-info');
+      const productName = document.getElementById('selected-product-name');
+      const productPrice = document.getElementById('selected-product-price');
+      const paypalContainer = document.getElementById('paypal-button-container');
+      
+      if (selectedProduct && productPrices[selectedProduct]) {
+        const product = productPrices[selectedProduct];
+        productName.textContent = product.name;
+        productPrice.textContent = product.price.toFixed(2);
+        productInfo.classList.remove('hidden');
+        
+        // Clear existing PayPal buttons
+        if (currentPayPalButtons) {
+          paypalContainer.innerHTML = '';
+        }
+        
+        // Check if user info is filled
+        const email = document.getElementById('user-email').value;
+        const name = document.getElementById('user-name').value;
+        
+        if (email && name && validateEmail(email)) {
+          renderPayPalButtons(selectedProduct, product.price);
+        } else {
+          paypalContainer.innerHTML = '<p class="text-gray-500 text-sm" data-en="Please fill in your email and name" data-ru="Пожалуйста, заполните email и имя">Please fill in your email and name</p>';
+        }
+      } else {
+        productInfo.classList.add('hidden');
+        paypalContainer.innerHTML = '<p class="text-gray-500 text-sm" data-en="Please select a plan" data-ru="Пожалуйста, выберите план">Please select a plan</p>';
+      }
+    }
+
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+
+    function renderPayPalButtons(productId, price) {
+      const paypalContainer = document.getElementById('paypal-button-container');
+      
       if (typeof paypal !== 'undefined') {
-        paypal.Buttons({
+        currentPayPalButtons = paypal.Buttons({
           style: {
             layout: 'horizontal',
             color: 'blue',
@@ -457,19 +540,89 @@
             height: 48
           },
           createOrder: function(data, actions) {
-            return actions.order.create({
-              purchase_units: [{ amount: { value: "19.99" } }]
+            const email = document.getElementById('user-email').value;
+            const name = document.getElementById('user-name').value;
+            const country = document.getElementById('user-country').value;
+            
+            // Create order with backend
+            return fetch('/api/create-payment', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                email: email,
+                product_id: productId,
+                name: name,
+                country: country
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.approval_url) {
+                // Redirect to PayPal for approval
+                window.location.href = data.approval_url;
+                return;
+              } else {
+                throw new Error(data.error || 'Payment creation failed');
+              }
+            })
+            .catch(error => {
+              alert(currentLang === 'en' ? 'Payment creation failed: ' + error.message : 'Ошибка создания платежа: ' + error.message);
             });
           },
           onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
-              alert(currentLang === 'en' ? '✅ Thank you! Payment successful.' : '✅ Спасибо! Оплата прошла успешно.');
+            // Execute payment with backend
+            return fetch('/api/execute-payment', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                paymentID: data.paymentID,
+                payerID: data.payerID
+              })
+            })
+            .then(response => response.json())
+            .then(result => {
+              if (result.success) {
+                alert(currentLang === 'en' ? 
+                  `✅ Payment successful! Your activation key: ${result.activation_key}\n\nCheck your email for download instructions.` : 
+                  `✅ Оплата успешна! Ваш ключ активации: ${result.activation_key}\n\nПроверьте email для инструкций по загрузке.`);
+                
+                // Optionally redirect to download page
+                setTimeout(() => {
+                  window.open(result.download_link, '_blank');
+                }, 2000);
+              } else {
+                throw new Error(result.error || 'Payment execution failed');
+              }
+            })
+            .catch(error => {
+              alert(currentLang === 'en' ? 'Payment failed: ' + error.message : 'Ошибка оплаты: ' + error.message);
             });
+          },
+          onError: function(err) {
+            alert(currentLang === 'en' ? 'PayPal error occurred' : 'Произошла ошибка PayPal');
+            console.error('PayPal error:', err);
           }
-        }).render('#paypal-button-container');
+        });
+        
+        currentPayPalButtons.render('#paypal-button-container');
       }
+    }
 
-      // Card number formatting
+    // Initialize PayPal Buttons
+     window.onload = function () {
+       // Add event listeners for form fields
+       document.getElementById('product-selection').addEventListener('change', updateProductSelection);
+       document.getElementById('user-email').addEventListener('input', updateProductSelection);
+       document.getElementById('user-name').addEventListener('input', updateProductSelection);
+       
+       // Initialize with default state
+       updateProductSelection();
+ 
+       // Card number formatting
       document.getElementById('card-number').addEventListener('input', function(e) {
         let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
         let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
@@ -494,6 +647,19 @@
       // Card payment form submission
       document.getElementById('card-payment-form').addEventListener('submit', function(e) {
         e.preventDefault();
+        
+        // Get user information
+        const email = document.getElementById('user-email').value;
+        const name = document.getElementById('user-name').value;
+        const country = document.getElementById('user-country').value;
+        const productSelect = document.getElementById('product-selection');
+        const selectedProduct = productSelect.value;
+        
+        // Validate user information
+        if (!email || !name || !selectedProduct || !validateEmail(email)) {
+          alert(currentLang === 'en' ? 'Please fill in your email, name and select a product.' : 'Пожалуйста, заполните email, имя и выберите продукт.');
+          return;
+        }
         
         const cardNumber = document.getElementById('card-number').value.replace(/\s/g, '');
         const expiryDate = document.getElementById('expiry-date').value;
@@ -521,20 +687,56 @@
           return;
         }
         
-        // Simulate payment processing
+        // Process payment with backend
         const submitButton = e.target.querySelector('button[type="submit"]');
         const originalText = submitButton.innerHTML;
         submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (currentLang === 'en' ? 'Processing...' : 'Обработка...');
         submitButton.disabled = true;
         
-        setTimeout(() => {
-          alert(currentLang === 'en' ? '✅ Thank you! Card payment successful.' : '✅ Спасибо! Оплата картой прошла успешно.');
-          submitButton.innerHTML = originalText;
+        // Send payment data to server
+        fetch('/api/process-card-payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            name: name,
+            country: country,
+            product_id: selectedProduct,
+            card_details: {
+              number: cardNumber,
+              expiry: expiryDate,
+              cvv: cvv,
+              name: cardholderName
+            }
+          })
+        })
+        .then(response => response.json())
+        .then(result => {
           submitButton.disabled = false;
+          submitButton.innerHTML = originalText;
           
-          // Reset form
-          e.target.reset();
-        }, 2000);
+          if (result.success) {
+            alert(currentLang === 'en' ? 
+              `✅ Payment successful! Your activation key: ${result.activation_key}\n\nCheck your email for download instructions.` : 
+              `✅ Оплата успешна! Ваш ключ активации: ${result.activation_key}\n\nПроверьте email для инструкций по загрузке.`);
+            
+            e.target.reset();
+            
+            // Optionally redirect to download page
+            setTimeout(() => {
+              window.open(result.download_link, '_blank');
+            }, 2000);
+          } else {
+            throw new Error(result.error || 'Payment processing failed');
+          }
+        })
+        .catch(error => {
+          submitButton.disabled = false;
+          submitButton.innerHTML = originalText;
+          alert(currentLang === 'en' ? 'Payment failed: ' + error.message : 'Ошибка оплаты: ' + error.message);
+        });
       });
     };
 
