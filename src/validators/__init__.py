@@ -16,7 +16,8 @@ from .utils import (
     validate_email,
     validate_activation_key,
     sanitize_input,
-    validate_amount
+    validate_amount,
+    generate_activation_key
 )
 
 __all__ = [
@@ -28,5 +29,6 @@ __all__ = [
     'validate_email',
     'validate_activation_key',
     'sanitize_input',
-    'validate_amount'
+    'validate_amount',
+    'generate_activation_key'
 ]
