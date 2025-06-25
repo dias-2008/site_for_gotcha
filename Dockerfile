@@ -13,7 +13,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     FLASK_ENV=production \
-    FLASK_DEBUG=False
+    FLASK_DEBUG=False \
+    PORT=5000
 
 # Install system dependencies (minimal set)
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -68,11 +69,11 @@ RUN mkdir -p /app/data /app/logs /app/backups /app/temp /app/products \
 USER appuser
 
 # Expose port
-EXPOSE 5000
+EXPOSE $PORT
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:5000/api/health || exit 1
+    CMD curl -f http://localhost:${PORT:-5000}/api/health || exit 1
 
-# Default command
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--worker-class", "sync", "--worker-connections", "1000", "--max-requests", "1000", "--max-requests-jitter", "100", "--timeout", "30", "--keep-alive", "2", "--log-level", "info", "--access-logfile", "-", "--error-logfile", "-", "payment_server:app"]
+# Default command - use shell form to allow environment variable expansion
+CMD gunicorn --bind 0.0.0.0:${PORT:-5000} --workers 2 --worker-class sync --worker-connections 1000 --max-requests 1000 --max-requests-jitter 100 --timeout 30 --keep-alive 2 --log-level info --access-logfile - --error-logfile - payment_server:app
