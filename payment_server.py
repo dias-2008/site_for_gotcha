@@ -33,8 +33,8 @@ from src.models.database import DatabaseManager
 from src.services.email_service import EmailService
 from src.services.payment_service import PaymentService
 from src.services.product_service import ProductService
-from src.utils.validators import validate_email, validate_activation_key
-from src.utils.security import generate_activation_key, create_secure_filename
+from src.validators import validate_email, validate_activation_key, generate_activation_key
+from src.utils.security import secure_filename
 from src.utils.logging_config import setup_logging
 
 # Load environment variables from .env file for local development
@@ -399,7 +399,7 @@ def download_product(activation_key):
         logger.info(f"Product downloaded: {purchase_info['product_id']} with key: {activation_key}")
         
         # Create secure filename
-        filename = create_secure_filename(
+        filename = secure_filename(
             f"gotcha_{purchase_info['product_id']}_{activation_key[:8]}.zip"
         )
         
