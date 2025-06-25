@@ -13,8 +13,9 @@ from .models.database import DatabaseManager
 from .services.email_service import EmailService
 from .services.payment_service import PaymentService
 from .services.product_service import ProductService
-from .utils.validators import validate_email, validate_activation_key
-from .utils.security import generate_activation_key, create_secure_filename
+from .validators import validate_email, validate_activation_key
+from .validators import generate_activation_key
+from .utils.security import secure_filename
 from .utils.logging_config import setup_logging
 
 __all__ = [
@@ -25,6 +26,6 @@ __all__ = [
     'validate_email',
     'validate_activation_key',
     'generate_activation_key',
-    'create_secure_filename',
+    'secure_filename',
     'setup_logging'
 ]
