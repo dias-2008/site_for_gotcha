@@ -1,0 +1,43 @@
+{
+  "gotcha_guardian_basic": {
+    "name": "Gotcha Guardian Basic",
+    "description": "Basic anti-cheat protection for your game",
+    "price": 29.99,
+    "features": [
+      "Real-time cheat detection",
+      "Basic reporting system",
+      "Email support"
+    ],
+    "download_url": "https://example.com/downloads/basic",
+    "activation_required": true
+  },
+  "gotcha_guardian_pro": {
+    "name": "Gotcha Guardian Pro",
+    "description": "Professional anti-cheat solution with advanced features",
+    "price": 59.99,
+    "features": [
+      "Advanced cheat detection",
+      "Real-time monitoring",
+      "Detailed analytics",
+      "Priority support",
+      "Custom integrations"
+    ],
+    "download_url": "https://example.com/downloads/pro",
+    "activation_required": true
+  },
+  "gotcha_guardian_enterprise": {
+    "name": "Gotcha Guardian Enterprise",
+    "description": "Enterprise-grade anti-cheat solution for large-scale deployments",
+    "price": 199.99,
+    "features": [
+      "Enterprise-level protection",
+      "24/7 monitoring",
+      "Advanced analytics dashboard",
+      "Dedicated support",
+      "Custom development",
+      "Multi-server support"
+    ],
+    "download_url": "https://example.com/downloads/enterprise",
+    "activation_required": true
+  }
+}
