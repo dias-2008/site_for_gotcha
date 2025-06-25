@@ -89,8 +89,8 @@ RUN mkdir -p /app/data /app/logs /app/backups /app/temp /app/products \
     && chown -R appuser:appuser /app \
     && chmod -R 755 /app
 
-# Create volume mount points
-VOLUME ["/app/data", "/app/logs", "/app/backups", "/app/products"]
+# Note: Volume mount points will be configured via Railway volumes
+# Railway volumes should be mounted to: /app/data, /app/logs, /app/backups, /app/products
 
 # Switch to non-root user
 USER appuser
