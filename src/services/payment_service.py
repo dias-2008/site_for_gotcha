@@ -458,3 +458,7 @@ class PaymentService:
         except Exception as e:
             self.logger.error(f"PayPal connection test failed: {str(e)}")
             return False
+    
+    def check_connection(self) -> bool:
+        """Check if PayPal service connection is working"""
+        return self.test_paypal_connection()
