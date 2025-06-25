@@ -64,7 +64,14 @@ else:
     limiter = None
 
 # Setup logging
-logger = setup_logging(config)
+loggers = setup_logging(
+    app_name='payment_server',
+    log_level=config.LOG_LEVEL,
+    log_dir=os.path.dirname(config.LOG_FILE) if config.LOG_FILE else './logs',
+    max_bytes=config.LOG_MAX_BYTES,
+    backup_count=config.LOG_BACKUP_COUNT
+)
+logger = loggers['app']
 
 # Initialize services
 db_manager = DatabaseManager(config)
