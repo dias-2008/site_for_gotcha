@@ -162,6 +162,17 @@ class Config:
             'use_tls': True
         }
     
+    def get_email_config(self) -> dict:
+        """Get email configuration dictionary"""
+        return {
+            'smtp_server': self.SMTP_SERVER,
+            'smtp_port': self.SMTP_PORT,
+            'username': self.EMAIL_ADDRESS,
+            'password': self.EMAIL_PASSWORD,
+            'from_email': self.EMAIL_ADDRESS,
+            'use_tls': True
+        }
+    
     def get_paypal_config(self) -> dict:
         """Get PayPal configuration dictionary"""
         return {
@@ -185,6 +196,19 @@ class Config:
             'file': self.LOG_FILE,
             'max_bytes': self.LOG_MAX_BYTES,
             'backup_count': self.LOG_BACKUP_COUNT
+        }
+    
+    def get_app_config(self) -> dict:
+        """Get application configuration dictionary"""
+        return {
+            'debug': self.DEBUG,
+            'port': self.PORT,
+            'host': self.HOST,
+            'secret_key': self.SECRET_KEY,
+            'download_directory': 'downloads',
+            'upload_folder': self.UPLOAD_FOLDER,
+            'max_content_length': self.MAX_CONTENT_LENGTH,
+            'base_url': f"http://{self.HOST}:{self.PORT}"
         }
     
     def __post_init__(self):
