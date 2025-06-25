@@ -34,7 +34,7 @@ WORKDIR /app
 COPY requirements-production.txt .
 
 # Install production Python dependencies
-RUN pip install --user --no-cache-dir -r requirements-production.txt
+RUN pip install --no-cache-dir -r requirements-production.txt
 
 # Set metadata labels
 LABEL maintainer="Gotcha Guardian Team <support@gotchaguardian.com>" \
@@ -51,8 +51,7 @@ LABEL maintainer="Gotcha Guardian Team <support@gotchaguardian.com>" \
       org.opencontainers.image.source="https://github.com/yourusername/gotcha-guardian-payment-server"
 
 # Set environment variables
-ENV PATH="/home/appuser/.local/bin:$PATH" \
-    PYTHONPATH="/app:$PYTHONPATH"
+ENV PYTHONPATH="/app:$PYTHONPATH"
 
 # Copy application code
 COPY --chown=appuser:appuser . .
