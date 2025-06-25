@@ -10,6 +10,15 @@ from typing import List, Optional
 from urllib.parse import urlparse
 
 
+def _parse_port(port_str: str) -> int:
+    """Parse port with error handling"""
+    try:
+        return int(port_str)
+    except (ValueError, TypeError):
+        print(f"Warning: Invalid PORT value '{port_str}', using default 5000")
+        return 5000
+
+
 @dataclass
 class Config:
     """Configuration class for payment server"""
@@ -33,7 +42,7 @@ class Config:
     
     # Application Configuration
     DEBUG: bool = os.getenv('DEBUG', 'False').lower() in ('true', '1', 'yes')
-    PORT: int = int(os.getenv('PORT', '5000'))
+    PORT: int = _parse_port(os.getenv('PORT', '5000'))
     HOST: str = os.getenv('HOST', '0.0.0.0')
     
     # Rate Limiting Configuration
