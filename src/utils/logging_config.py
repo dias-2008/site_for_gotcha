@@ -91,8 +91,14 @@ def setup_logging(app_name: str = 'gotcha_guardian',
     """Setup comprehensive logging configuration"""
     
     # Create logs directory if it doesn't exist
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir)
+    try:
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir, exist_ok=True)
+    except (OSError, PermissionError) as e:
+        # Fallback to current directory if logs directory can't be created
+        print(f"Warning: Could not create log directory '{log_dir}': {e}")
+        print("Falling back to current directory for logs")
+        log_dir = '.'
     
     # Configure root logger
     root_logger = logging.getLogger()
@@ -119,49 +125,68 @@ def setup_logging(app_name: str = 'gotcha_guardian',
     console_handler.addFilter(context_filter)
     
     # Main application log file
-    app_handler = logging.handlers.RotatingFileHandler(
-        os.path.join(log_dir, f'{app_name}.log'),
-        maxBytes=max_bytes,
-        backupCount=backup_count
-    )
-    app_handler.setLevel(getattr(logging, log_level.upper()))
-    app_handler.setFormatter(formatter)
-    app_handler.addFilter(context_filter)
+    app_handler = None
+    try:
+        app_handler = logging.handlers.RotatingFileHandler(
+            os.path.join(log_dir, f'{app_name}.log'),
+            maxBytes=max_bytes,
+            backupCount=backup_count
+        )
+        app_handler.setLevel(getattr(logging, log_level.upper()))
+        app_handler.setFormatter(formatter)
+        app_handler.addFilter(context_filter)
+    except (OSError, PermissionError) as e:
+        print(f"Warning: Could not create application log file: {e}")
+        print("Application will use console logging only")
     
     # Error log file
-    error_handler = logging.handlers.RotatingFileHandler(
-        os.path.join(log_dir, f'{app_name}_errors.log'),
-        maxBytes=max_bytes,
-        backupCount=backup_count
-    )
-    error_handler.setLevel(logging.ERROR)
-    error_handler.setFormatter(formatter)
-    error_handler.addFilter(context_filter)
+    error_handler = None
+    try:
+        error_handler = logging.handlers.RotatingFileHandler(
+            os.path.join(log_dir, f'{app_name}_errors.log'),
+            maxBytes=max_bytes,
+            backupCount=backup_count
+        )
+        error_handler.setLevel(logging.ERROR)
+        error_handler.setFormatter(formatter)
+        error_handler.addFilter(context_filter)
+    except (OSError, PermissionError) as e:
+        print(f"Warning: Could not create error log file: {e}")
     
     # Security log file
-    security_handler = logging.handlers.RotatingFileHandler(
-        os.path.join(log_dir, f'{app_name}_security.log'),
-        maxBytes=max_bytes,
-        backupCount=backup_count
-    )
-    security_handler.setLevel(logging.INFO)
-    security_handler.setFormatter(formatter)
-    security_handler.addFilter(context_filter)
+    security_handler = None
+    try:
+        security_handler = logging.handlers.RotatingFileHandler(
+            os.path.join(log_dir, f'{app_name}_security.log'),
+            maxBytes=max_bytes,
+            backupCount=backup_count
+        )
+        security_handler.setLevel(logging.INFO)
+        security_handler.setFormatter(formatter)
+        security_handler.addFilter(context_filter)
+    except (OSError, PermissionError) as e:
+        print(f"Warning: Could not create security log file: {e}")
     
     # Payment log file
-    payment_handler = logging.handlers.RotatingFileHandler(
-        os.path.join(log_dir, f'{app_name}_payments.log'),
-        maxBytes=max_bytes,
-        backupCount=backup_count
-    )
-    payment_handler.setLevel(logging.INFO)
-    payment_handler.setFormatter(formatter)
-    payment_handler.addFilter(context_filter)
+    payment_handler = None
+    try:
+        payment_handler = logging.handlers.RotatingFileHandler(
+            os.path.join(log_dir, f'{app_name}_payments.log'),
+            maxBytes=max_bytes,
+            backupCount=backup_count
+        )
+        payment_handler.setLevel(logging.INFO)
+        payment_handler.setFormatter(formatter)
+        payment_handler.addFilter(context_filter)
+    except (OSError, PermissionError) as e:
+        print(f"Warning: Could not create payment log file: {e}")
     
     # Add handlers to root logger
     root_logger.addHandler(console_handler)
-    root_logger.addHandler(app_handler)
-    root_logger.addHandler(error_handler)
+    if app_handler:
+        root_logger.addHandler(app_handler)
+    if error_handler:
+        root_logger.addHandler(error_handler)
     
     # Create specialized loggers
     loggers = {
@@ -174,11 +199,13 @@ def setup_logging(app_name: str = 'gotcha_guardian',
     }
     
     # Configure security logger
-    loggers['security'].addHandler(security_handler)
+    if security_handler:
+        loggers['security'].addHandler(security_handler)
     loggers['security'].propagate = False
     
     # Configure payment logger
-    loggers['payment'].addHandler(payment_handler)
+    if payment_handler:
+        loggers['payment'].addHandler(payment_handler)
     loggers['payment'].propagate = False
     
     # Set levels for specialized loggers
