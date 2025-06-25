@@ -1,29 +1,307 @@
-# Core dependencies
-# Essential web server dependencies only
-# (Desktop monitoring dependencies removed for Railway deployment)
-
-# Core web framework
+# Core Flask dependencies
 Flask==2.3.3
 Flask-CORS==4.0.0
-Flask-SQLAlchemy==2.5.1
-SQLAlchemy==1.4.46
-Werkzeug>=2.3.7
+Flask-Limiter==3.5.0
+Werkzeug==2.3.7
 
-# Web server
-gunicorn==20.1.0
+# Request validation and serialization
+marshmallow==3.20.1
+WTForms==3.0.1
 
-# Database
-psycopg2-binary>=2.9.3
-
-# Payment processing
+# PayPal SDK
 paypalrestsdk==1.13.3
 
-# Utilities
-requests>=2.28.0
-python-dotenv>=1.0.0
+# Database
+sqlite3  # Built-in with Python
 
-# Development dependencies (optional)
-pytest>=7.0.0
-pytest-cov>=4.0.0
-black>=22.0.0
-flake8>=5.0.0
+# Email
+smtplib  # Built-in with Python
+email-validator==2.0.0
+
+# Security and encryption
+cryptography==41.0.4
+PyJWT==2.8.0
+bcrypt==4.0.1
+
+# HTTP requests
+requests==2.31.0
+
+# Environment variables
+python-dotenv==1.0.0
+
+# Date and time handling
+python-dateutil==2.8.2
+
+# File handling and compression
+zipfile36==0.1.3  # Enhanced zipfile for older Python versions
+
+# Logging and monitoring
+coloredlogs==15.0.1
+
+# Development and testing
+pytest==7.4.2
+pytest-flask==1.2.0
+pytest-cov==4.1.0
+flake8==6.0.0
+black==23.7.0
+
+# Optional: Enhanced features
+# Uncomment if you want to use these features
+
+# QR Code generation
+# qrcode[pil]==7.4.2
+
+# System monitoring
+# psutil==5.9.5
+
+# Image processing (for QR codes)
+# Pillow==10.0.0
+
+# Advanced logging
+# structlog==23.1.0
+
+# Rate limiting with Redis (alternative to memory-based)
+# redis==4.6.0
+
+# Database migrations (if using SQLAlchemy instead of raw SQLite)
+# Flask-SQLAlchemy==3.0.5
+# Flask-Migrate==4.0.5
+
+# API documentation
+# flask-restx==1.1.0
+# flasgger==0.9.7.1
+
+# Background tasks
+# celery==5.3.1
+# redis==4.6.0  # For Celery broker
+
+# Production WSGI server
+gunicorn==21.2.0
+
+# Configuration management
+pydantic==2.3.0
+
+# Timezone handling
+pytz==2023.3
+
+# File type detection
+python-magic==0.4.27
+
+# URL parsing and validation
+furl==2.1.3
+
+# HTML sanitization
+bleach==6.0.0
+
+# JSON Web Tokens
+PyJWT[crypto]==2.8.0
+
+# Password strength validation
+password-strength==0.0.3.post2
+
+# IP address handling
+ipaddress  # Built-in with Python 3.3+
+
+# Regular expressions (enhanced)
+regex==2023.8.8
+
+# Decimal handling
+# decimal  # Built-in with Python
+
+# UUID generation
+# uuid  # Built-in with Python
+
+# Base64 encoding/decoding
+# base64  # Built-in with Python
+
+# Hash algorithms
+# hashlib  # Built-in with Python
+
+# Random number generation
+# secrets  # Built-in with Python 3.6+
+
+# String operations
+# string  # Built-in with Python
+
+# Operating system interface
+# os  # Built-in with Python
+
+# File and directory operations
+# shutil  # Built-in with Python
+
+# Path operations
+# pathlib  # Built-in with Python 3.4+
+
+# Time operations
+# time  # Built-in with Python
+
+# CSV file handling
+# csv  # Built-in with Python
+
+# JSON handling
+# json  # Built-in with Python
+
+# Threading
+# threading  # Built-in with Python
+
+# Subprocess management
+# subprocess  # Built-in with Python
+
+# Glob pattern matching
+# glob  # Built-in with Python
+
+# Temporary files
+# tempfile  # Built-in with Python
+
+# URL parsing
+# urllib  # Built-in with Python
+
+# HTTP server (for development)
+# http.server  # Built-in with Python
+
+# Socket operations
+# socket  # Built-in with Python
+
+# SSL/TLS support
+# ssl  # Built-in with Python
+
+# Compression
+# gzip  # Built-in with Python
+# bz2   # Built-in with Python
+# lzma  # Built-in with Python
+
+# Data structures
+# collections  # Built-in with Python
+# heapq       # Built-in with Python
+# bisect      # Built-in with Python
+
+# Functional programming
+# functools   # Built-in with Python
+# itertools   # Built-in with Python
+# operator    # Built-in with Python
+
+# Type hints
+# typing      # Built-in with Python 3.5+
+
+# Context managers
+# contextlib  # Built-in with Python
+
+# Warnings
+# warnings    # Built-in with Python
+
+# Logging
+# logging     # Built-in with Python
+
+# Configuration parser
+# configparser # Built-in with Python
+
+# Argument parsing
+# argparse    # Built-in with Python
+
+# System-specific parameters
+# sys         # Built-in with Python
+
+# Platform identification
+# platform    # Built-in with Python
+
+# Locale settings
+# locale      # Built-in with Python
+
+# Calendar functions
+# calendar    # Built-in with Python
+
+# Mathematical functions
+# math        # Built-in with Python
+# statistics  # Built-in with Python 3.4+
+# fractions   # Built-in with Python
+# cmath       # Built-in with Python (complex math)
+
+# Random number generation
+# random      # Built-in with Python
+
+# Copying objects
+# copy        # Built-in with Python
+
+# Weak references
+# weakref     # Built-in with Python
+
+# Garbage collection
+# gc          # Built-in with Python
+
+# Inspection
+# inspect     # Built-in with Python
+
+# Abstract base classes
+# abc         # Built-in with Python
+
+# Enum support
+# enum        # Built-in with Python 3.4+
+
+# Data classes
+# dataclasses # Built-in with Python 3.7+
+
+# Asynchronous I/O
+# asyncio     # Built-in with Python 3.4+
+# concurrent.futures # Built-in with Python 3.2+
+
+# Multiprocessing
+# multiprocessing # Built-in with Python
+
+# Queue operations
+# queue       # Built-in with Python
+
+# Pickle serialization
+# pickle      # Built-in with Python
+# shelve      # Built-in with Python
+
+# Database interfaces
+# sqlite3     # Built-in with Python
+# dbm         # Built-in with Python
+
+# XML processing
+# xml         # Built-in with Python
+# html        # Built-in with Python
+
+# Internet protocols
+# email       # Built-in with Python
+# smtplib     # Built-in with Python
+# poplib      # Built-in with Python
+# imaplib     # Built-in with Python
+# ftplib      # Built-in with Python
+# telnetlib   # Built-in with Python
+
+# Multimedia
+# wave        # Built-in with Python
+# audioop     # Built-in with Python
+# aifc        # Built-in with Python
+# sunau       # Built-in with Python
+# chunk       # Built-in with Python
+# colorsys    # Built-in with Python
+# imghdr      # Built-in with Python
+# sndhdr      # Built-in with Python
+
+# Cryptographic services
+# hmac        # Built-in with Python
+# hashlib     # Built-in with Python
+# secrets     # Built-in with Python 3.6+
+
+# Generic operating system services
+# io          # Built-in with Python
+# errno       # Built-in with Python
+# ctypes      # Built-in with Python
+
+# Unix specific services
+# pwd         # Built-in with Python (Unix)
+# grp         # Built-in with Python (Unix)
+# termios     # Built-in with Python (Unix)
+# tty         # Built-in with Python (Unix)
+# pty         # Built-in with Python (Unix)
+# fcntl       # Built-in with Python (Unix)
+# pipes       # Built-in with Python (Unix)
+# resource    # Built-in with Python (Unix)
+# syslog      # Built-in with Python (Unix)
+
+# Windows specific services
+# msvcrt      # Built-in with Python (Windows)
+# winreg      # Built-in with Python (Windows)
+# winsound    # Built-in with Python (Windows)

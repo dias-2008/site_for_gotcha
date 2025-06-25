@@ -1,0 +1,56 @@
+GOTCHA GUARDIAN ADMIN - NEW PURCHASE NOTIFICATION
+=================================================
+
+A new purchase has been completed on the Gotcha Guardian payment server.
+
+PURCHASE INFORMATION
+====================
+Order ID: {{ order_id }}
+Transaction ID: {{ transaction_id }}
+Product: {{ product_name }}
+Amount: ${{ amount }}
+Payment Method: PayPal
+Purchase Date: {{ purchase_date }}
+
+CUSTOMER INFORMATION
+====================
+Name: {{ customer_name }}
+Email: {{ customer_email }}
+Country: {{ customer_country }}
+{% if customer_ip %}IP Address: {{ customer_ip }}{% endif %}
+
+{% if activation_key %}
+GENERATED ACTIVATION KEY
+========================
+{{ activation_key }}
+{% endif %}
+
+{% if daily_stats %}
+TODAY'S STATISTICS
+==================
+Revenue: ${{ daily_stats.revenue }}
+Orders: {{ daily_stats.orders }}
+Customers: {{ daily_stats.customers }}
+Average Order: ${{ daily_stats.avg_order }}
+{% endif %}
+
+{% if is_suspicious %}
+SUSPICIOUS ACTIVITY DETECTED
+============================
+This purchase has been flagged for the following reasons:
+{% for reason in suspicious_reasons %}
+- {{ reason }}
+{% endfor %}
+
+PLEASE REVIEW THIS ORDER MANUALLY.
+{% endif %}
+
+QUICK ACTIONS
+=============
+Admin Dashboard: {{ admin_dashboard_url }}
+Order Details: {{ order_details_url }}
+
+---
+This notification was sent from the Gotcha Guardian payment server.
+Server: {{ server_name }} | Environment: {{ environment }}
+© {{ current_year }} Gotcha Guardian Admin System

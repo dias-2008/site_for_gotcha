@@ -1,0 +1,61 @@
+GOTCHA GUARDIAN - PURCHASE CONFIRMATION
+========================================
+
+Dear {{ customer_name }},
+
+Thank you for your purchase! Your payment has been successfully processed and your order is ready for download.
+
+ORDER DETAILS
+=============
+Order ID: {{ order_id }}
+Transaction ID: {{ transaction_id }}
+Product: {{ product_name }}
+Amount Paid: ${{ amount }}
+Purchase Date: {{ purchase_date }}
+Email: {{ customer_email }}
+
+{% if download_url %}
+DOWNLOAD YOUR PRODUCT
+=====================
+Your download is ready! Use the following link to download your product:
+{{ download_url }}
+
+IMPORTANT: This download link will expire in {{ download_expiry_hours }} hours for security reasons.
+{% endif %}
+
+{% if activation_key %}
+YOUR ACTIVATION KEY
+===================
+Please save this activation key in a secure location. You will need it to activate your software:
+
+{{ activation_key }}
+
+IMPORTANT: Keep this key safe! You will need it every time you install or reinstall the software.
+{% endif %}
+
+IMPORTANT INFORMATION
+=====================
+- Save your activation key in a secure location
+- Download links expire after {{ download_expiry_hours }} hours
+- For technical support, please contact us with your Order ID
+- This software is licensed for personal use only
+- Please read the included documentation for installation instructions
+
+NEED HELP?
+==========
+If you have any questions or need assistance, please contact our support team:
+
+Email: {{ support_email }}
+Response Time: Within 24 hours
+Include: Your Order ID ({{ order_id }}) in any support requests
+
+Thank you for choosing Gotcha Guardian! We hope you enjoy your purchase.
+
+Best regards,
+The Gotcha Guardian Team
+
+---
+This is an automated email. Please do not reply to this message.
+© {{ current_year }} Gotcha Guardian. All rights reserved.
+
+If you did not make this purchase, please contact us immediately at {{ support_email }}

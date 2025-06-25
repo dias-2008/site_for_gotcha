@@ -1,27 +1,297 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
-    "builder": "NIXPACKS"
+    "builder": "DOCKERFILE",
+    "dockerfilePath": "Dockerfile",
+    "buildCommand": "docker build --target production -t gotcha-guardian-payment-server ."
   },
   "deploy": {
-    "startCommand": "gunicorn --bind 0.0.0.0:$PORT --workers 1 --timeout 120 payment_server:app",
-    "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10,
+    "startCommand": "gunicorn --bind 0.0.0.0:$PORT --workers 2 --worker-class sync --worker-connections 1000 --max-requests 1000 --max-requests-jitter 100 --timeout 30 --keep-alive 2 --log-level info --access-logfile - --error-logfile - payment_server:app",
     "healthcheckPath": "/api/health",
-    "healthcheckTimeout": 300
+    "healthcheckTimeout": 300,
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
   },
   "environments": {
     "production": {
       "variables": {
-        "PAYPAL_MODE": "live",
-        "DEBUG": "false"
-      }
+        "FLASK_ENV": "production",
+        "FLASK_DEBUG": "False",
+        "LOG_LEVEL": "INFO",
+        "RATE_LIMIT_ENABLED": "True",
+        "SECURE_HEADERS_ENABLED": "True",
+        "SESSION_COOKIE_SECURE": "True",
+        "CSRF_PROTECTION_ENABLED": "True",
+        "DATABASE_PATH": "./data/payment_server.db",
+        "LOG_DIR": "./logs",
+        "PRODUCT_FILES_DIR": "./products",
+        "BACKUP_DIR": "./backups",
+        "CONSOLE_LOG_ENABLED": "True",
+        "CONSOLE_LOG_LEVEL": "INFO",
+        "HEALTH_CHECK_ENABLED": "True",
+        "METRICS_ENABLED": "True",
+        "PERFORMANCE_MONITORING": "True",
+        "BACKUP_ENABLED": "True",
+        "CLEANUP_TEMP_FILES": "True",
+        "CLEANUP_OLD_LOGS": "True"
+      },
+      "secrets": [
+        "SECRET_KEY",
+        "PAYPAL_CLIENT_ID",
+        "PAYPAL_CLIENT_SECRET",
+        "PAYPAL_WEBHOOK_ID",
+        "SMTP_USERNAME",
+        "SMTP_PASSWORD",
+        "ENCRYPTION_KEY",
+        "JWT_SECRET_KEY",
+        "FROM_EMAIL",
+        "ADMIN_EMAIL",
+        "SUPPORT_EMAIL"
+      ]
     },
     "staging": {
       "variables": {
+        "FLASK_ENV": "staging",
+        "FLASK_DEBUG": "False",
+        "LOG_LEVEL": "DEBUG",
         "PAYPAL_MODE": "sandbox",
-        "DEBUG": "true"
+        "RATE_LIMIT_ENABLED": "True",
+        "SECURE_HEADERS_ENABLED": "True",
+        "SESSION_COOKIE_SECURE": "False",
+        "CSRF_PROTECTION_ENABLED": "True",
+        "DATABASE_PATH": "./data/staging_payment_server.db",
+        "LOG_DIR": "./logs",
+        "PRODUCT_FILES_DIR": "./products",
+        "BACKUP_DIR": "./backups",
+        "CONSOLE_LOG_ENABLED": "True",
+        "CONSOLE_LOG_LEVEL": "DEBUG",
+        "HEALTH_CHECK_ENABLED": "True",
+        "METRICS_ENABLED": "True",
+        "PERFORMANCE_MONITORING": "True",
+        "BACKUP_ENABLED": "False",
+        "CLEANUP_TEMP_FILES": "True",
+        "CLEANUP_OLD_LOGS": "False"
+      },
+      "secrets": [
+        "SECRET_KEY",
+        "PAYPAL_CLIENT_ID",
+        "PAYPAL_CLIENT_SECRET",
+        "PAYPAL_WEBHOOK_ID",
+        "SMTP_USERNAME",
+        "SMTP_PASSWORD",
+        "ENCRYPTION_KEY",
+        "JWT_SECRET_KEY",
+        "FROM_EMAIL",
+        "ADMIN_EMAIL",
+        "SUPPORT_EMAIL"
+      ]
+    },
+    "development": {
+      "variables": {
+        "FLASK_ENV": "development",
+        "FLASK_DEBUG": "True",
+        "LOG_LEVEL": "DEBUG",
+        "PAYPAL_MODE": "sandbox",
+        "RATE_LIMIT_ENABLED": "False",
+        "SECURE_HEADERS_ENABLED": "False",
+        "SESSION_COOKIE_SECURE": "False",
+        "CSRF_PROTECTION_ENABLED": "False",
+        "DATABASE_PATH": "./data/dev_payment_server.db",
+        "LOG_DIR": "./logs",
+        "PRODUCT_FILES_DIR": "./products",
+        "BACKUP_DIR": "./backups",
+        "CONSOLE_LOG_ENABLED": "True",
+        "CONSOLE_LOG_LEVEL": "DEBUG",
+        "HEALTH_CHECK_ENABLED": "True",
+        "METRICS_ENABLED": "False",
+        "PERFORMANCE_MONITORING": "False",
+        "BACKUP_ENABLED": "False",
+        "CLEANUP_TEMP_FILES": "False",
+        "CLEANUP_OLD_LOGS": "False",
+        "MOCK_PAYPAL": "True",
+        "MOCK_EMAIL": "True"
+      },
+      "secrets": [
+        "SECRET_KEY",
+        "ENCRYPTION_KEY",
+        "JWT_SECRET_KEY"
+      ]
+    }
+  },
+  "services": [
+    {
+      "name": "payment-server",
+      "source": {
+        "type": "github",
+        "repo": "yourusername/gotcha-guardian-payment-server",
+        "branch": "main"
+      },
+      "variables": {
+        "PORT": "${{ PORT }}",
+        "RAILWAY_ENVIRONMENT": "${{ RAILWAY_ENVIRONMENT }}",
+        "RAILWAY_PROJECT_ID": "${{ RAILWAY_PROJECT_ID }}",
+        "RAILWAY_SERVICE_ID": "${{ RAILWAY_SERVICE_ID }}",
+        "BASE_URL": "https://${{ RAILWAY_PUBLIC_DOMAIN }}",
+        "PAYPAL_WEBHOOK_URL": "https://${{ RAILWAY_PUBLIC_DOMAIN }}/api/paypal/webhook"
+      },
+      "domains": [
+        {
+          "host": "${{ RAILWAY_PUBLIC_DOMAIN }}"
+        }
+      ],
+      "healthcheck": {
+        "path": "/api/health",
+        "timeout": 300
+      },
+      "resources": {
+        "cpu": 1000,
+        "memory": 512
       }
     }
+  ],
+  "plugins": [
+    {
+      "name": "postgresql",
+      "plan": "hobby",
+      "variables": {
+        "POSTGRES_DB": "gotcha_guardian",
+        "POSTGRES_USER": "payment_server"
+      }
+    }
+  ],
+  "volumes": [
+    {
+      "name": "data",
+      "mountPath": "/app/data",
+      "size": "1GB"
+    },
+    {
+      "name": "logs",
+      "mountPath": "/app/logs",
+      "size": "500MB"
+    },
+    {
+      "name": "backups",
+      "mountPath": "/app/backups",
+      "size": "2GB"
+    }
+  ],
+  "networking": {
+    "allowPublic": true,
+    "serviceDomains": true
+  },
+  "monitoring": {
+    "metrics": true,
+    "logs": true,
+    "alerts": [
+      {
+        "name": "High CPU Usage",
+        "condition": "cpu > 80",
+        "duration": "5m",
+        "channels": ["email"]
+      },
+      {
+        "name": "High Memory Usage",
+        "condition": "memory > 90",
+        "duration": "5m",
+        "channels": ["email"]
+      },
+      {
+        "name": "Service Down",
+        "condition": "healthcheck_failed",
+        "duration": "1m",
+        "channels": ["email", "slack"]
+      },
+      {
+        "name": "High Error Rate",
+        "condition": "error_rate > 5",
+        "duration": "2m",
+        "channels": ["email"]
+      }
+    ]
+  },
+  "cron": [
+    {
+      "name": "database-backup",
+      "schedule": "0 2 * * *",
+      "command": "python -c 'from src.models.database import DatabaseManager; DatabaseManager().create_backup()'"
+    },
+    {
+      "name": "cleanup-old-logs",
+      "schedule": "0 3 * * 0",
+      "command": "python -c 'from src.utils.helpers import clean_old_files; clean_old_files(\"./logs\", 30)'"
+    },
+    {
+      "name": "cleanup-temp-files",
+      "schedule": "0 4 * * *",
+      "command": "python -c 'from src.utils.helpers import clean_old_files; clean_old_files(\"./temp\", 1)'"
+    }
+  ],
+  "deployment": {
+    "strategy": "rolling",
+    "maxUnavailable": 0,
+    "maxSurge": 1,
+    "progressDeadlineSeconds": 600,
+    "revisionHistoryLimit": 5
+  },
+  "scaling": {
+    "autoscaling": {
+      "enabled": true,
+      "minReplicas": 1,
+      "maxReplicas": 3,
+      "targetCPUUtilizationPercentage": 70,
+      "targetMemoryUtilizationPercentage": 80
+    }
+  },
+  "security": {
+    "allowedOrigins": [
+      "https://${{ RAILWAY_PUBLIC_DOMAIN }}",
+      "https://yourdomain.com",
+      "https://www.yourdomain.com"
+    ],
+    "headers": {
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "X-XSS-Protection": "1; mode=block",
+      "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+      "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https:; connect-src 'self' https:; frame-ancestors 'none';"
+    }
+  },
+  "backup": {
+    "enabled": true,
+    "schedule": "0 1 * * *",
+    "retention": "30d",
+    "compression": true,
+    "encryption": true
+  },
+  "notifications": {
+    "deployment": {
+      "success": true,
+      "failure": true,
+      "channels": ["email"]
+    },
+    "alerts": {
+      "channels": {
+        "email": {
+          "enabled": true,
+          "recipients": ["admin@yourdomain.com"]
+        },
+        "slack": {
+          "enabled": false,
+          "webhook": "${{ SLACK_WEBHOOK_URL }}"
+        }
+      }
+    }
+  },
+  "metadata": {
+    "name": "Gotcha Guardian Payment Server",
+    "description": "Secure payment processing server for software sales with PayPal integration",
+    "version": "1.0.0",
+    "author": "Gotcha Guardian Team",
+    "license": "MIT",
+    "repository": "https://github.com/yourusername/gotcha-guardian-payment-server",
+    "documentation": "https://github.com/yourusername/gotcha-guardian-payment-server/blob/main/README.md",
+    "support": "support@yourdomain.com",
+    "tags": ["payment", "paypal", "security", "flask", "python", "ecommerce"]
   }
 }

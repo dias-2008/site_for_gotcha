@@ -1,0 +1,274 @@
+{
+  "products": {
+    "gotcha_guardian_basic": {
+      "id": "gotcha_guardian_basic",
+      "name": "Gotcha Guardian Basic",
+      "description": "Essential protection software for your digital security needs. Includes basic malware detection, real-time scanning, and automatic updates.",
+      "version": "1.0.0",
+      "price": 29.99,
+      "currency": "USD",
+      "category": "security",
+      "tags": ["antivirus", "security", "protection", "basic"],
+      "features": [
+        "Real-time malware scanning",
+        "Automatic virus definition updates",
+        "Basic firewall protection",
+        "Email security scanning",
+        "24/7 customer support"
+      ],
+      "system_requirements": {
+        "os": ["Windows 10", "Windows 11"],
+        "ram": "4GB minimum, 8GB recommended",
+        "storage": "2GB free space",
+        "processor": "Intel Core i3 or AMD equivalent"
+      },
+      "files": {
+        "installer": {
+          "filename": "GotchaGuardianBasic_v1.0.0.exe",
+          "size": 156789012,
+          "hash": "sha256:a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456",
+          "download_url": "/api/download/gotcha_guardian_basic"
+        },
+        "documentation": {
+          "filename": "GotchaGuardian_UserManual.pdf",
+          "size": 2456789,
+          "hash": "sha256:b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234567",
+          "download_url": "/api/download/gotcha_guardian_basic/docs"
+        }
+      },
+      "license": {
+        "type": "commercial",
+        "duration_days": 365,
+        "max_installations": 3,
+        "transferable": false
+      },
+      "activation": {
+        "required": true,
+        "method": "online",
+        "grace_period_days": 30
+      },
+      "support": {
+        "email": "support@gotchaguardian.com",
+        "phone": "+1-800-GOTCHA1",
+        "hours": "24/7",
+        "knowledge_base": "https://support.gotchaguardian.com"
+      },
+      "metadata": {
+        "created_date": "2024-01-15T10:00:00Z",
+        "last_updated": "2024-01-15T10:00:00Z",
+        "status": "active",
+        "featured": true,
+        "popularity_score": 85
+      }
+    },
+    "gotcha_guardian_pro": {
+      "id": "gotcha_guardian_pro",
+      "name": "Gotcha Guardian Pro",
+      "description": "Advanced protection suite with enhanced features for power users and small businesses. Includes advanced threat detection, VPN, and premium support.",
+      "version": "1.0.0",
+      "price": 59.99,
+      "currency": "USD",
+      "category": "security",
+      "tags": ["antivirus", "security", "protection", "professional", "vpn"],
+      "features": [
+        "Advanced threat detection and removal",
+        "Built-in VPN with 50+ server locations",
+        "Advanced firewall with custom rules",
+        "Email and web protection",
+        "Password manager",
+        "Secure file shredder",
+        "System optimization tools",
+        "Priority customer support"
+      ],
+      "system_requirements": {
+        "os": ["Windows 10", "Windows 11", "macOS 10.15+"],
+        "ram": "8GB minimum, 16GB recommended",
+        "storage": "4GB free space",
+        "processor": "Intel Core i5 or AMD Ryzen 5 equivalent"
+      },
+      "files": {
+        "installer": {
+          "filename": "GotchaGuardianPro_v1.0.0.exe",
+          "size": 289456123,
+          "hash": "sha256:c3d4e5f6789012345678901234567890abcdef1234567890abcdef12345678",
+          "download_url": "/api/download/gotcha_guardian_pro"
+        },
+        "documentation": {
+          "filename": "GotchaGuardianPro_UserManual.pdf",
+          "size": 4567890,
+          "hash": "sha256:d4e5f6789012345678901234567890abcdef1234567890abcdef123456789",
+          "download_url": "/api/download/gotcha_guardian_pro/docs"
+        },
+        "vpn_config": {
+          "filename": "VPN_Configuration_Tool.exe",
+          "size": 12345678,
+          "hash": "sha256:e5f6789012345678901234567890abcdef1234567890abcdef1234567890",
+          "download_url": "/api/download/gotcha_guardian_pro/vpn"
+        }
+      },
+      "license": {
+        "type": "commercial",
+        "duration_days": 365,
+        "max_installations": 5,
+        "transferable": true
+      },
+      "activation": {
+        "required": true,
+        "method": "online",
+        "grace_period_days": 30
+      },
+      "support": {
+        "email": "pro-support@gotchaguardian.com",
+        "phone": "+1-800-GOTCHA2",
+        "hours": "24/7",
+        "knowledge_base": "https://pro.gotchaguardian.com/support",
+        "priority": "high"
+      },
+      "metadata": {
+        "created_date": "2024-01-15T10:00:00Z",
+        "last_updated": "2024-01-15T10:00:00Z",
+        "status": "active",
+        "featured": true,
+        "popularity_score": 92
+      }
+    },
+    "gotcha_guardian_enterprise": {
+      "id": "gotcha_guardian_enterprise",
+      "name": "Gotcha Guardian Enterprise",
+      "description": "Complete enterprise security solution with centralized management, advanced reporting, and dedicated support for organizations.",
+      "version": "1.0.0",
+      "price": 199.99,
+      "currency": "USD",
+      "category": "security",
+      "tags": ["antivirus", "security", "enterprise", "management", "reporting"],
+      "features": [
+        "Centralized management console",
+        "Advanced threat intelligence",
+        "Endpoint detection and response (EDR)",
+        "Network security monitoring",
+        "Compliance reporting",
+        "Multi-platform support",
+        "API integration capabilities",
+        "Dedicated account manager",
+        "On-site training and setup"
+      ],
+      "system_requirements": {
+        "os": ["Windows 10", "Windows 11", "Windows Server 2019+", "macOS 10.15+", "Linux Ubuntu 18.04+"],
+        "ram": "16GB minimum, 32GB recommended",
+        "storage": "10GB free space",
+        "processor": "Intel Core i7 or AMD Ryzen 7 equivalent",
+        "network": "Dedicated management server recommended"
+      },
+      "files": {
+        "installer": {
+          "filename": "GotchaGuardianEnterprise_v1.0.0.msi",
+          "size": 456789123,
+          "hash": "sha256:f6789012345678901234567890abcdef1234567890abcdef123456789012",
+          "download_url": "/api/download/gotcha_guardian_enterprise"
+        },
+        "management_console": {
+          "filename": "GG_ManagementConsole_v1.0.0.exe",
+          "size": 123456789,
+          "hash": "sha256:789012345678901234567890abcdef1234567890abcdef1234567890123",
+          "download_url": "/api/download/gotcha_guardian_enterprise/console"
+        },
+        "documentation": {
+          "filename": "GotchaGuardianEnterprise_AdminGuide.pdf",
+          "size": 8901234,
+          "hash": "sha256:89012345678901234567890abcdef1234567890abcdef12345678901234",
+          "download_url": "/api/download/gotcha_guardian_enterprise/docs"
+        },
+        "deployment_tools": {
+          "filename": "GG_DeploymentTools.zip",
+          "size": 67890123,
+          "hash": "sha256:9012345678901234567890abcdef1234567890abcdef123456789012345",
+          "download_url": "/api/download/gotcha_guardian_enterprise/tools"
+        }
+      },
+      "license": {
+        "type": "commercial",
+        "duration_days": 365,
+        "max_installations": 100,
+        "transferable": true,
+        "volume_licensing": true
+      },
+      "activation": {
+        "required": true,
+        "method": "online",
+        "grace_period_days": 30,
+        "offline_activation": true
+      },
+      "support": {
+        "email": "enterprise-support@gotchaguardian.com",
+        "phone": "+1-800-GOTCHA3",
+        "hours": "24/7",
+        "knowledge_base": "https://enterprise.gotchaguardian.com/support",
+        "priority": "critical",
+        "dedicated_manager": true,
+        "sla": "99.9% uptime guarantee"
+      },
+      "metadata": {
+        "created_date": "2024-01-15T10:00:00Z",
+        "last_updated": "2024-01-15T10:00:00Z",
+        "status": "active",
+        "featured": false,
+        "popularity_score": 78,
+        "requires_approval": true
+      }
+    }
+  },
+  "categories": {
+    "security": {
+      "name": "Security Software",
+      "description": "Comprehensive security solutions for individuals and businesses",
+      "icon": "shield",
+      "color": "#2563eb"
+    }
+  },
+  "global_settings": {
+    "default_currency": "USD",
+    "supported_currencies": ["USD", "EUR", "GBP"],
+    "tax_rates": {
+      "US": 0.08,
+      "EU": 0.20,
+      "UK": 0.20
+    },
+    "download_settings": {
+      "max_download_attempts": 3,
+      "download_link_expiry_hours": 24,
+      "require_activation_for_download": true
+    },
+    "activation_settings": {
+      "key_format": "XXXX-XXXX-XXXX-XXXX",
+      "key_length": 16,
+      "allow_offline_activation": false,
+      "grace_period_days": 30
+    },
+    "support_settings": {
+      "default_support_email": "support@gotchaguardian.com",
+      "default_support_phone": "+1-800-GOTCHA0",
+      "knowledge_base_url": "https://support.gotchaguardian.com",
+      "ticket_system_url": "https://tickets.gotchaguardian.com"
+    },
+    "security_settings": {
+      "require_email_verification": true,
+      "max_failed_activation_attempts": 5,
+      "block_suspicious_downloads": true,
+      "log_all_download_attempts": true
+    },
+    "notification_settings": {
+      "send_purchase_confirmation": true,
+      "send_download_instructions": true,
+      "send_activation_reminders": true,
+      "send_renewal_notices": true
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2024-01-15T10:00:00Z",
+    "schema_version": "1.0",
+    "total_products": 3,
+    "active_products": 3,
+    "featured_products": 2
+  }
+}

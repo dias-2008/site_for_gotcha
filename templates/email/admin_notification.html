@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Purchase Notification - Gotcha Guardian Admin</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #10b981;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+        .title {
+            color: #2d3748;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .notification-badge {
+            background: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .purchase-details {
+            background: #f0fff4;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #10b981;
+        }
+        .customer-details {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 5px 0;
+        }
+        .detail-label {
+            font-weight: bold;
+            color: #4a5568;
+        }
+        .detail-value {
+            color: #2d3748;
+        }
+        .amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #10b981;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .stats-section {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stat-item {
+            text-align: center;
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .action-buttons {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .action-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 5px 10px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+            font-size: 14px;
+        }
+        .urgent {
+            background: #fed7d7;
+            border-color: #fc8181;
+            color: #742a2a;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 20px;
+            }
+            .detail-row {
+                flex-direction: column;
+            }
+            .detail-label {
+                margin-bottom: 5px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🛡️ Gotcha Guardian Admin</div>
+            <h1 class="title">New Purchase Notification</h1>
+            <div class="notification-badge">💰 New Sale!</div>
+        </div>
+
+        <p>A new purchase has been completed on the Gotcha Guardian payment server.</p>
+
+        <div class="purchase-details">
+            <h3 style="margin-top: 0; color: #2d3748;">💳 Purchase Information</h3>
+            <div class="detail-row">
+                <span class="detail-label">Order ID:</span>
+                <span class="detail-value">{{ order_id }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Transaction ID:</span>
+                <span class="detail-value">{{ transaction_id }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Product:</span>
+                <span class="detail-value">{{ product_name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Payment Method:</span>
+                <span class="detail-value">PayPal</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Purchase Date:</span>
+                <span class="detail-value">{{ purchase_date }}</span>
+            </div>
+            <div class="amount">${{ amount }}</div>
+        </div>
+
+        <div class="customer-details">
+            <h3 style="margin-top: 0; color: #2d3748;">👤 Customer Information</h3>
+            <div class="detail-row">
+                <span class="detail-label">Name:</span>
+                <span class="detail-value">{{ customer_name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Email:</span>
+                <span class="detail-value">{{ customer_email }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Country:</span>
+                <span class="detail-value">{{ customer_country }}</span>
+            </div>
+            {% if customer_ip %}
+            <div class="detail-row">
+                <span class="detail-label">IP Address:</span>
+                <span class="detail-value">{{ customer_ip }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if activation_key %}
+        <div class="purchase-details">
+            <h3 style="margin-top: 0; color: #2d3748;">🔑 Generated Activation Key</h3>
+            <div style="background: #2d3748; color: #e2e8f0; padding: 15px; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 14px; word-break: break-all;">
+                {{ activation_key }}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if daily_stats %}
+        <div class="stats-section">
+            <h3 style="margin-top: 0; color: #2d3748;">📊 Today's Statistics</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value">${{ daily_stats.revenue }}</div>
+                    <div class="stat-label">Revenue</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ daily_stats.orders }}</div>
+                    <div class="stat-label">Orders</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ daily_stats.customers }}</div>
+                    <div class="stat-label">Customers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${{ daily_stats.avg_order }}</div>
+                    <div class="stat-label">Avg Order</div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="action-buttons">
+            <a href="{{ admin_dashboard_url }}" class="action-button">View Dashboard</a>
+            <a href="{{ order_details_url }}" class="action-button">Order Details</a>
+        </div>
+
+        {% if is_suspicious %}
+        <div class="purchase-details urgent">
+            <h3 style="margin-top: 0; color: #742a2a;">⚠️ Suspicious Activity Detected</h3>
+            <p>This purchase has been flagged for the following reasons:</p>
+            <ul>
+                {% for reason in suspicious_reasons %}
+                <li>{{ reason }}</li>
+                {% endfor %}
+            </ul>
+            <p><strong>Please review this order manually.</strong></p>
+        </div>
+        {% endif %}
+
+        <div class="footer">
+            <p>This notification was sent from the Gotcha Guardian payment server.</p>
+            <p>Server: {{ server_name }} | Environment: {{ environment }}</p>
+            <p>© {{ current_year }} Gotcha Guardian Admin System</p>
+        </div>
+    </div>
+</body>
+</html>
