@@ -56,8 +56,8 @@ CORS(app, origins=['*'], methods=['GET', 'POST', 'OPTIONS'])
 # Setup rate limiting
 if config.RATE_LIMIT_ENABLED:
     limiter = Limiter(
-        app,
         key_func=get_remote_address,
+        app=app,
         default_limits=[config.RATE_LIMIT_DEFAULT]
     )
 else:
