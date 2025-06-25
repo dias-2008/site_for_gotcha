@@ -152,19 +152,32 @@ class EmailService:
         
         return self.send_email(email, subject, body, is_html=True)
     
-    def send_admin_alert(self, subject: str, message: str, 
-                        alert_type: str = 'info') -> bool:
-        """Send alert to admin"""
-        admin_email = self.email_config.get('admin_email', self.email_config['from_email'])
+    def send_admin_alert(self, alert_type: str, message: str, 
+                         server_name: str = "Payment Server") -> bool:
+        """Send admin alert email"""
+        subject = f"System Alert: {alert_type}"
         
         body = self._get_admin_alert_template().format(
-            alert_type=alert_type.upper(),
+            alert_type=alert_type,
             message=message,
-            timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            server_name=self.config.get_app_config().get('app_name', 'Gotcha Guardian')
+            server_name=server_name,
+            timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         )
         
-        return self.send_email(admin_email, f"[{alert_type.upper()}] {subject}", body, is_html=True)
+        admin_email = self.email_config.get('admin_email', self.email_config['from_email'])
+        return self.send_email(admin_email, subject, body, is_html=True)
+    
+    def check_connection(self) -> bool:
+        """Check if email service connection is working"""
+        try:
+            with self._get_smtp_connection() as server:
+                # Test connection by getting server status
+                server.noop()  # No-operation command to test connection
+                self.logger.info("Email service connection test successful")
+                return True
+        except Exception as e:
+            self.logger.error(f"Email service connection test failed: {str(e)}")
+            return False
     
     def test_email_connection(self) -> bool:
         """Test email connection and configuration"""
@@ -225,6 +238,18 @@ class EmailService:
         </body>
         </html>
         """
+    
+    def check_connection(self) -> bool:
+        """Check if email service connection is working"""
+        try:
+            with self._get_smtp_connection() as server:
+                # Perform a simple NOOP command to test connection
+                server.noop()
+                self.logger.info("Email service connection test successful")
+                return True
+        except Exception as e:
+            self.logger.error(f"Email service connection test failed: {str(e)}")
+            return False
     
     def _get_contact_form_template(self) -> str:
         """Get contact form notification template"""
