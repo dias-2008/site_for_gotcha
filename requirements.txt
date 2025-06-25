@@ -12,10 +12,10 @@ WTForms==3.0.1
 paypalrestsdk==1.13.3
 
 # Database
-sqlite3  # Built-in with Python
+# sqlite3 is built-in with Python - no need to install
 
 # Email
-smtplib  # Built-in with Python
+# smtplib is built-in with Python - no need to install
 email-validator==2.0.0
 
 # Security and encryption
