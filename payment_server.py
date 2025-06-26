@@ -552,3 +552,112 @@ if __name__ == '__main__':
         port=config.PORT,
         threaded=True
     )
+# Add this route after your existing routes
+@app.route('/api/config', methods=['GET'])
+def get_config():
+    """Get frontend configuration"""
+    try:
+        config = {
+            'paypal_client_id': os.getenv('PAYPAL_CLIENT_ID', '')
+        }
+        return create_success_response(config)
+    except Exception as e:
+        logger.error(f"Config retrieval error: {str(e)}")
+        return create_error_response("Failed to retrieve configuration", 500)
+
+@app.route('/api/process-card-payment', methods=['POST'])
+@limiter.limit(config.RATE_LIMIT_PAYMENT) if limiter else lambda f: f
+def process_card_payment():
+    """Process credit/debit card payment (placeholder implementation)"""
+    try:
+        log_request_info()
+        
+        # Get request data
+        data = request.get_json() or {}
+        
+        # Basic validation
+        required_fields = ['email', 'name', 'country', 'product_id', 'card_details']
+        for field in required_fields:
+            if field not in data:
+                return jsonify(create_error_response(
+                    f"Missing required field: {field}"
+                )), 400
+        
+        card_details = data.get('card_details', {})
+        required_card_fields = ['number', 'expiry', 'cvv', 'name']
+        for field in required_card_fields:
+            if field not in card_details:
+                return jsonify(create_error_response(
+                    f"Missing required card field: {field}"
+                )), 400
+        
+        # Get product info
+        products = product_service.get_available_products()
+        product_id = data['product_id']
+        
+        if product_id not in products:
+            return jsonify(create_error_response(
+                "Invalid product selected"
+            )), 400
+        
+        product_info = products[product_id]
+        
+        # NOTE: This is a placeholder implementation
+        # In a real production environment, you would:
+        # 1. Integrate with a payment processor like Stripe, Square, or similar
+        # 2. Validate card details securely
+        # 3. Process the actual payment
+        # 4. Handle PCI compliance requirements
+        
+        # For demo purposes, we'll simulate a successful payment
+        # and generate an activation key
+        
+        # Generate activation key
+        activation_key = payment_service._generate_activation_key(product_id)
+        
+        # Create purchase record
+        purchase_id = db_manager.create_purchase(
+            email=data['email'],
+            product_id=product_id,
+            amount=product_info['price'],
+            paypal_payment_id=f"CARD_{activation_key}",  # Use unique identifier
+            status='completed'
+        )
+        
+        if purchase_id:
+            # Update with activation key
+            db_manager.update_purchase_status(
+                paypal_payment_id=f"CARD_{activation_key}",
+                status='completed',
+                activation_key=activation_key
+            )
+            
+            # Create download link
+            download_link = f"{request.url_root}api/download/{activation_key}"
+            
+            # Send activation email
+            email_sent = email_service.send_activation_email(
+                email=data['email'],
+                product_id=product_id,
+                activation_key=activation_key,
+                download_link=download_link
+            )
+            
+            logger.info(f"Card payment processed successfully for {data['email']}")
+            
+            return jsonify(create_success_response({
+                'activation_key': activation_key,
+                'download_link': download_link,
+                'email_sent': email_sent
+            }, "Payment successful! Check your email for the activation key."))
+        else:
+            logger.error(f"Failed to create purchase record for card payment")
+            return jsonify(create_error_response(
+                "Payment processing failed. Please try again."
+            )), 500
+            
+    except Exception as e:
+        logger.error(f"Card payment processing error: {str(e)}")
+        return jsonify(create_error_response(
+            "Payment processing failed. Please contact support."
+        )), 500
