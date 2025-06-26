@@ -1,384 +1,795 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gotcha Guardian - Payment Portal</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
-    <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .card-shadow {
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gotcha - Advanced Security Solutions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="paypal-sdk"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    .float-animation {
+      animation: float 6s ease-in-out infinite;
+    }
+    .modal {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- Header -->
-    <header class="gradient-bg text-white py-6">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                        <span class="text-purple-600 font-bold text-xl">G</span>
-                    </div>
-                    <h1 class="text-2xl font-bold">Gotcha Guardian</h1>
-                </div>
-                <nav class="hidden md:flex space-x-6">
-                    <a href="#products" class="hover:text-purple-200 transition-colors">Products</a>
-                    <a href="#features" class="hover:text-purple-200 transition-colors">Features</a>
-                    <a href="#support" class="hover:text-purple-200 transition-colors">Support</a>
-                </nav>
-            </div>
+<body class="bg-gray-900 text-white min-h-screen">
+  <!-- Background Animation -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 float-animation"></div>
+    <div class="absolute top-3/4 right-1/4 w-64 h-64 bg-green-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 float-animation" style="animation-delay: 2s;"></div>
+    <div class="absolute bottom-1/4 left-1/2 w-64 h-64 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 float-animation" style="animation-delay: 4s;"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="bg-gray-800 bg-opacity-90 backdrop-blur-sm fixed w-full z-50 border-b border-gray-700">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-green-400 text-transparent bg-clip-text">
+        🔒 Gotcha
+      </div>
+      
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex space-x-6 items-center">
+        <a href="#plans" class="hover:text-blue-400 transition" data-en="Plans" data-ru="Планы">Plans</a>
+        <a href="#contact" class="hover:text-blue-400 transition" data-en="Contact" data-ru="Контакты">Contact</a>
+        <button id="languageToggle" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded transition">
+          🌐 EN/RU
+        </button>
+      </div>
+      
+      <!-- Mobile Menu Button -->
+      <button id="menuToggle" class="md:hidden">
+        <i class="fas fa-bars text-xl"></i>
+      </button>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-gray-800 border-t border-gray-700">
+      <div class="px-4 py-2 space-y-2">
+        <a href="#plans" class="block py-2 hover:text-blue-400 transition" data-en="Plans" data-ru="Планы">Plans</a>
+        <a href="#contact" class="block py-2 hover:text-blue-400 transition" data-en="Contact" data-ru="Контакты">Contact</a>
+        <button id="languageToggleMobile" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded transition">
+          🌐 EN/RU
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="pt-20 pb-16 px-4 text-center relative z-10">
+    <div class="container mx-auto max-w-4xl">
+      <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-500 to-green-400 text-transparent bg-clip-text" data-en="Advanced Security Solutions" data-ru="Продвинутые решения безопасности">
+        Advanced Security Solutions
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-300 mb-8" data-en="Protect your digital life with cutting-edge monitoring and security tools" data-ru="Защитите свою цифровую жизнь с помощью передовых инструментов мониторинга и безопасности">
+        Protect your digital life with cutting-edge monitoring and security tools
+      </p>
+      <a href="#plans" class="inline-block bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600 px-8 py-4 rounded-xl text-lg font-semibold transition transform hover:scale-105">
+        🚀 <span data-en="Get Started" data-ru="Начать">Get Started</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Plans Section -->
+  <section id="plans" class="py-16 px-4 relative z-10">
+    <div class="container mx-auto max-w-6xl">
+      <h2 class="text-4xl font-bold text-center mb-12 bg-gradient-to-r from-blue-500 to-green-400 text-transparent bg-clip-text" data-en="Choose Your Security Plan" data-ru="Выберите свой план безопасности">
+        Choose Your Security Plan
+      </h2>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Watcher Trial -->
+        <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700 hover:border-blue-500 transition transform hover:scale-105">
+          <div class="text-center mb-6">
+            <div class="text-4xl mb-4">👁️</div>
+            <h3 class="text-2xl font-bold mb-2" data-en="Watcher Trial" data-ru="Пробный вариант Watcher">Watcher Trial</h3>
+            <div class="text-3xl font-bold text-blue-400 mb-2">$2.00</div>
+            <p class="text-gray-400" data-en="Basic monitoring essentials" data-ru="Основы базового мониторинга">Basic monitoring essentials</p>
+          </div>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center"><span class="text-green-500 mr-2">✔️</span><span data-en="Silent startup monitoring" data-ru="Скрытый мониторинг при запуске">Silent startup monitoring</span></li>
+            <li class="flex items-center"><span class="text-green-500 mr-2">✔️</span><span data-en="Telegram notifications" data-ru="Уведомления в Telegram">Telegram notifications</span></li>
+            <li class="flex items-center"><span class="text-green-500 mr-2">✔️</span><span data-en="Basic activity logging" data-ru="Базовое логирование активности">Basic activity logging</span></li>
+            <li class="flex items-center"><span class="text-green-500 mr-2">✔️</span><span data-en="Email alerts" data-ru="Email уведомления">Email alerts</span></li>
+          </ul>
+          <button onclick="openModal('watcher')" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-xl font-semibold transition">
+            <span data-en="Learn More" data-ru="Подробнее">Learn More</span>
+          </button>
         </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-12">
-        <!-- Hero Section -->
-        <section class="text-center mb-16">
-            <h2 class="text-4xl font-bold text-gray-800 mb-4">Advanced System Monitoring & Protection</h2>
-            <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                Protect your system with our advanced monitoring software. Real-time threat detection, 
-                comprehensive activity logging, and intelligent anomaly detection.
-            </p>
-        </section>
+        <!-- Guardian Trial -->
+        <div class="bg-gray-800 rounded-2xl p-8 border border-green-500 hover:border-green-400 transition transform hover:scale-105 relative">
+          <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-black px-4 py-1 rounded-full text-sm font-bold">
+            <span data-en="POPULAR" data-ru="ПОПУЛЯРНЫЙ">POPULAR</span>
+          </div>
+          <div class="text-center mb-6">
+            <div class="text-4xl mb-4">🛡️</div>
+            <h3 class="text-2xl font-bold mb-2" data-en="Guardian Trial" data-ru="Пробный вариант Guardian">Guardian Trial</h3>
+            <div class="text-3xl font-bold text-green-400 mb-2">$19.99</div>
+            <p class="text-gray-400" data-en="Advanced protection suite" data-ru="Продвинутый пакет защиты">Advanced protection suite</p>
+          </div>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center"><span class="text-green-500 mr-2">✔️</span><span data-en="Everything in Watcher" data-ru="Все из Watcher">Everything in Watcher</span></li>
+            <li class="flex items-center"><span class="text-green-500 mr-2">✔️</span><span data-en="Real-time threat detection" data-ru="Обнаружение угроз в реальном времени">Real-time threat detection</span></li>
+            <li class="flex items-center"><span class="text-green-500 mr-2">✔️</span><span data-en="Automatic internet disconnect" data-ru="Автоматическое отключение интернета">Automatic internet disconnect</span></li>
+            <li class="flex items-center"><span class="text-green-500 mr-2">✔️</span><span data-en="Camera monitoring" data-ru="Мониторинг камеры">Camera monitoring</span></li>
+          </ul>
+          <button onclick="openModal('guardian')" class="w-full bg-green-600 hover:bg-green-700 py-3 rounded-xl font-semibold transition">
+            <span data-en="Learn More" data-ru="Подробнее">Learn More</span>
+          </button>
+        </div>
 
-        <!-- Products Section -->
-        <section id="products" class="mb-16">
-            <h3 class="text-3xl font-bold text-center text-gray-800 mb-12">Choose Your Protection Level</h3>
-            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                <!-- Basic Plan -->
-                <div class="bg-white rounded-lg card-shadow p-8 relative">
-                    <div class="text-center mb-6">
-                        <h4 class="text-2xl font-bold text-gray-800 mb-2">Basic Guardian</h4>
-                        <div class="text-4xl font-bold text-purple-600 mb-2">$29.99</div>
-                        <p class="text-gray-600">Essential monitoring features</p>
-                    </div>
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            Real-time system monitoring
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            Basic threat detection
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            Activity logging
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            Email support
-                        </li>
-                    </ul>
-                    <button onclick="selectProduct('basic')" class="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
-                        Select Basic
-                    </button>
-                </div>
+        <!-- Commander Trial -->
+        <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700 hover:border-purple-500 transition transform hover:scale-105">
+          <div class="text-center mb-6">
+            <div class="text-4xl mb-4">⚔️</div>
+            <h3 class="text-2xl font-bold mb-2" data-en="Commander Trial" data-ru="Пробный вариант Commander">Commander Trial</h3>
+            <div class="text-3xl font-bold text-purple-400 mb-2">$39.99</div>
+            <p class="text-gray-400" data-en="Ultimate security arsenal" data-ru="Максимальный арсенал безопасности">Ultimate security arsenal</p>
+          </div>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center"><span class="text-green-500 mr-2">✔️</span><span data-en="Everything in Guardian" data-ru="Все из Guardian">Everything in Guardian</span></li>
+            <li class="flex items-center"><span class="text-green-500 mr-2">✔️</span><span data-en="AI threat assessment" data-ru="ИИ-оценка угроз">AI threat assessment</span></li>
+            <li class="flex items-center"><span class="text-green-500 mr-2">✔️</span><span data-en="Microphone surveillance" data-ru="Наблюдение через микрофон">Microphone surveillance</span></li>
+            <li class="flex items-center"><span class="text-green-500 mr-2">✔️</span><span data-en="Advanced RAT detection" data-ru="Продвинутое обнаружение RAT">Advanced RAT detection</span></li>
+          </ul>
+          <button onclick="openModal('commander')" class="w-full bg-purple-600 hover:bg-purple-700 py-3 rounded-xl font-semibold transition">
+            <span data-en="Learn More" data-ru="Подробнее">Learn More</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-                <!-- Pro Plan -->
-                <div class="bg-white rounded-lg card-shadow p-8 relative border-2 border-purple-500">
-                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                        <span class="bg-purple-500 text-white px-4 py-1 rounded-full text-sm font-semibold">Most Popular</span>
-                    </div>
-                    <div class="text-center mb-6">
-                        <h4 class="text-2xl font-bold text-gray-800 mb-2">Pro Guardian</h4>
-                        <div class="text-4xl font-bold text-purple-600 mb-2">$59.99</div>
-                        <p class="text-gray-600">Advanced protection & analytics</p>
-                    </div>
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            Everything in Basic
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            Advanced anomaly detection
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            Behavioral analysis
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            Custom alerts
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            Priority support
-                        </li>
-                    </ul>
-                    <button onclick="selectProduct('pro')" class="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
-                        Select Pro
-                    </button>
-                </div>
-
-                <!-- Enterprise Plan -->
-                <div class="bg-white rounded-lg card-shadow p-8 relative">
-                    <div class="text-center mb-6">
-                        <h4 class="text-2xl font-bold text-gray-800 mb-2">Enterprise Guardian</h4>
-                        <div class="text-4xl font-bold text-purple-600 mb-2">$99.99</div>
-                        <p class="text-gray-600">Complete security solution</p>
-                    </div>
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            Everything in Pro
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            Multi-system monitoring
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            Advanced reporting
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            API access
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            24/7 phone support
-                        </li>
-                    </ul>
-                    <button onclick="selectProduct('enterprise')" class="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
-                        Select Enterprise
-                    </button>
-                </div>
+  <!-- Payment Section -->
+  <section id="payment" class="py-16 px-4 bg-gray-800 relative z-10">
+    <div class="container mx-auto max-w-4xl">
+      <h2 class="text-4xl font-bold text-center mb-12 bg-gradient-to-r from-blue-500 to-green-400 text-transparent bg-clip-text" data-en="Secure Payment" data-ru="Безопасная оплата">
+        Secure Payment
+      </h2>
+      
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- User Information -->
+        <div class="bg-gray-900 rounded-2xl p-8">
+          <h3 class="text-2xl font-bold mb-6" data-en="Your Information" data-ru="Ваша информация">Your Information</h3>
+          <form id="userInfoForm" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium mb-2" data-en="Email Address" data-ru="Email адрес">Email Address</label>
+              <input type="email" id="user-email" required class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:border-blue-500 focus:outline-none">
             </div>
-        </section>
-
-        <!-- Payment Section -->
-        <section id="payment" class="max-w-md mx-auto bg-white rounded-lg card-shadow p-8" style="display: none;">
-            <h3 class="text-2xl font-bold text-center text-gray-800 mb-6">Complete Your Purchase</h3>
-            
-            <div id="selected-product" class="mb-6 p-4 bg-purple-50 rounded-lg">
-                <!-- Selected product details will be inserted here -->
+            <div>
+              <label class="block text-sm font-medium mb-2" data-en="Full Name" data-ru="Полное имя">Full Name</label>
+              <input type="text" id="user-name" required class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:border-blue-500 focus:outline-none">
             </div>
+            <div>
+              <label class="block text-sm font-medium mb-2" data-en="Country" data-ru="Страна">Country</label>
+              <select id="user-country" required class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:border-blue-500 focus:outline-none">
+                <option value="">Select Country</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="GB">United Kingdom</option>
+                <option value="DE">Germany</option>
+                <option value="FR">France</option>
+                <option value="RU">Russia</option>
+                <option value="UA">Ukraine</option>
+                <option value="PL">Poland</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2" data-en="Select Plan" data-ru="Выберите план">Select Plan</label>
+              <select id="product-selection" required class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:border-blue-500 focus:outline-none">
+                <option value="">Choose a plan</option>
+                <option value="watcher">Watcher Trial - $2.00</option>
+                <option value="guardian">Guardian Trial - $19.99</option>
+                <option value="commander">Commander Trial - $39.99</option>
+              </select>
+            </div>
+          </form>
+        </div>
 
-            <form id="payment-form" class="space-y-4">
+        <!-- Payment Methods -->
+        <div class="bg-gray-900 rounded-2xl p-8">
+          <h3 class="text-2xl font-bold mb-6" data-en="Payment Method" data-ru="Способ оплаты">Payment Method</h3>
+          
+          <!-- Selected Product Info -->
+          <div id="selected-product-info" class="hidden mb-6 p-4 bg-gray-800 rounded-lg">
+            <h4 class="font-semibold mb-2" data-en="Selected Plan:" data-ru="Выбранный план:">Selected Plan:</h4>
+            <p class="text-lg"><span id="selected-product-name"></span> - $<span id="selected-product-price"></span></p>
+          </div>
+
+          <!-- PayPal Payment -->
+          <div class="mb-6">
+            <h4 class="text-lg font-semibold mb-4" data-en="PayPal Payment" data-ru="Оплата через PayPal">PayPal Payment</h4>
+            <div id="paypal-button-container" class="min-h-[50px]">
+              <p class="text-gray-500 text-sm" data-en="Please select a plan" data-ru="Пожалуйста, выберите план">Please select a plan</p>
+            </div>
+          </div>
+
+          <!-- Card Payment -->
+          <div class="border-t border-gray-700 pt-6">
+            <h4 class="text-lg font-semibold mb-4" data-en="Credit Card Payment" data-ru="Оплата картой">Credit Card Payment</h4>
+            <form id="cardPaymentForm" class="space-y-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div class="col-span-2">
+                  <label class="block text-sm font-medium mb-2" data-en="Card Number" data-ru="Номер карты">Card Number</label>
+                  <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:border-blue-500 focus:outline-none">
+                </div>
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                    <input type="email" id="email" name="email" required 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                           placeholder="your@email.com">
+                  <label class="block text-sm font-medium mb-2" data-en="Expiry Date" data-ru="Срок действия">Expiry Date</label>
+                  <input type="text" id="expiry-date" placeholder="MM/YY" maxlength="5" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:border-blue-500 focus:outline-none">
                 </div>
-                
-                <div id="paypal-button-container" class="mt-6">
-                    <!-- PayPal button will be rendered here -->
+                <div>
+                  <label class="block text-sm font-medium mb-2" data-en="CVV" data-ru="CVV">CVV</label>
+                  <input type="text" id="cvv" placeholder="123" maxlength="4" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:border-blue-500 focus:outline-none">
                 </div>
+                <div class="col-span-2">
+                  <label class="block text-sm font-medium mb-2" data-en="Cardholder Name" data-ru="Имя держателя карты">Cardholder Name</label>
+                  <input type="text" id="cardholder-name" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:border-blue-500 focus:outline-none">
+                </div>
+              </div>
+              <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600 py-3 rounded-xl font-semibold transition transform hover:scale-105">
+                <span data-en="Pay Now" data-ru="Оплатить сейчас">Pay Now</span>
+              </button>
             </form>
-
-            <div class="mt-6 text-center">
-                <button onclick="goBack()" class="text-purple-600 hover:text-purple-800 transition-colors">
-                    ← Back to Products
-                </button>
-            </div>
-        </section>
-
-        <!-- Success Section -->
-        <section id="success" class="max-w-md mx-auto bg-white rounded-lg card-shadow p-8 text-center" style="display: none;">
-            <div class="mb-6">
-                <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                </svg>
-                <h3 class="text-2xl font-bold text-gray-800 mb-2">Payment Successful!</h3>
-                <p class="text-gray-600">Thank you for your purchase. Check your email for download instructions.</p>
-            </div>
-            
-            <div id="download-info" class="mb-6 p-4 bg-green-50 rounded-lg">
-                <!-- Download information will be inserted here -->
-            </div>
-
-            <button onclick="startOver()" class="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
-                Make Another Purchase
-            </button>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8 mt-16">
-        <div class="container mx-auto px-4 text-center">
-            <p>&copy; 2024 Gotcha Guardian. All rights reserved.</p>
-            <div class="mt-4 space-x-6">
-                <a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
-                <a href="#" class="text-gray-400 hover:text-white transition-colors">Support</a>
-            </div>
+          </div>
         </div>
-    </footer>
+      </div>
+    </div>
+  </section>
 
-    <script>
-        let selectedProduct = null;
-        let paypalButtonRendered = false;
+  <!-- Contact Section -->
+  <section id="contact" class="py-16 px-4 relative z-10">
+    <div class="container mx-auto max-w-4xl">
+      <h2 class="text-4xl font-bold text-center mb-12 bg-gradient-to-r from-blue-500 to-green-400 text-transparent bg-clip-text" data-en="Contact Us" data-ru="Свяжитесь с нами">
+        Contact Us
+      </h2>
+      
+      <div class="bg-gray-800 rounded-2xl p-8">
+        <form id="contactForm" class="space-y-6">
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium mb-2" data-en="Name" data-ru="Имя">Name</label>
+              <input type="text" name="name" required class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg focus:border-blue-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2" data-en="Email" data-ru="Email">Email</label>
+              <input type="email" name="email" required class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg focus:border-blue-500 focus:outline-none">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2" data-en="Message" data-ru="Сообщение">Message</label>
+            <textarea name="message" rows="5" required class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg focus:border-blue-500 focus:outline-none resize-none"></textarea>
+          </div>
+          <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600 py-3 rounded-xl font-semibold transition transform hover:scale-105">
+            <span data-en="Send Message" data-ru="Отправить сообщение">Send Message</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
 
-        const products = {
-            basic: {
-                id: 'basic',
-                name: 'Basic Guardian',
-                price: 29.99,
-                description: 'Essential monitoring features'
-            },
-            pro: {
-                id: 'pro', 
-                name: 'Pro Guardian',
-                price: 59.99,
-                description: 'Advanced protection & analytics'
-            },
-            enterprise: {
-                id: 'enterprise',
-                name: 'Enterprise Guardian', 
-                price: 99.99,
-                description: 'Complete security solution'
-            }
+  <!-- Footer -->
+  <footer class="bg-gray-800 py-8 px-4 border-t border-gray-700 relative z-10">
+    <div class="container mx-auto text-center">
+      <p class="text-gray-400" data-en="© 2024 Gotcha Security Solutions. All rights reserved." data-ru="© 2024 Gotcha Security Solutions. Все права защищены.">© 2024 Gotcha Security Solutions. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Plan Details Modal -->
+  <div id="planModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 modal">
+    <div class="bg-gray-800 rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h3 id="modalTitle" class="text-2xl font-bold"></h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+      </div>
+      
+      <div class="mb-6">
+        <h4 class="text-lg font-semibold mb-3" data-en="Recommended Usage:" data-ru="Рекомендуемое использование:">Recommended Usage:</h4>
+        <p id="modalUsage" class="text-gray-300"></p>
+      </div>
+      
+      <div class="mb-6">
+        <h4 class="text-lg font-semibold mb-3" data-en="Features:" data-ru="Возможности:">Features:</h4>
+        <ul id="modalFeatures" class="space-y-2 text-gray-300"></ul>
+      </div>
+      
+      <button onclick="closeModal(); document.getElementById('payment').scrollIntoView({behavior: 'smooth'});" class="w-full bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600 py-3 rounded-xl font-semibold transition transform hover:scale-105">
+        <span data-en="Get This Plan" data-ru="Получить этот план">Get This Plan</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Load PayPal SDK dynamically with environment variable
+    fetch('/api/config')
+      .then(response => response.json())
+      .then(config => {
+        const script = document.getElementById('paypal-sdk');
+        script.src = `https://www.paypal.com/sdk/js?client-id=${config.paypal_client_id}&currency=USD`;
+        script.onload = function() {
+          console.log('PayPal SDK loaded successfully');
         };
+      })
+      .catch(error => {
+        console.error('Failed to load PayPal configuration:', error);
+      });
 
-        function selectProduct(productId) {
-            selectedProduct = products[productId];
-            showPaymentSection();
+    // ... existing code ...
+    const translations = {
+      en: {
+        watcher: "Watcher Trial",
+        guardian: "Guardian Trial", 
+        commander: "Commander Trial",
+        modalUsage: {
+          watcher: "Perfect for individuals who want basic monitoring of their computer activity. Ideal for personal use and small-scale security needs.",
+          guardian: "Designed for users who need comprehensive protection against advanced threats. Great for professionals and businesses.",
+          commander: "Ultimate security solution for high-risk environments. Perfect for security professionals and organizations with critical data."
+        },
+        features: {
+          watcher: [
+            "Silent startup monitoring with stealth mode",
+            "Real-time Telegram notifications for all activities", 
+            "Basic activity logging and screenshot capture",
+            "Email alerts for suspicious behavior",
+            "Simple installation and configuration"
+          ],
+          guardian: [
+            "Everything included in Watcher Trial",
+            "Advanced real-time threat detection system",
+            "Automatic internet disconnection on high-risk detection",
+            "Real-time camera monitoring with motion detection",
+            "Enhanced activity analysis and reporting",
+            "Advanced screenshot and screen recording capabilities"
+          ],
+          commander: [
+            "Everything included in Guardian Trial",
+            "AI-powered threat assessment system with risk analysis",
+            "Automatic internet disconnection on high-risk detection",
+            "Real-time camera monitoring with motion detection",
+            "Microphone surveillance with audio analysis",
+            "Advanced RAT (Remote Access Trojan) detection engine",
+            "Behavioral analysis and anomaly detection",
+            "Comprehensive forensic logging and reporting"
+          ]
+        }
+      },
+      ru: {
+        watcher: "Пробный вариант Watcher",
+        guardian: "Пробный вариант Guardian",
+        commander: "Пробный вариант Commander",
+        modalUsage: {
+          watcher: "Идеально подходит для людей, которым нужен базовый мониторинг активности компьютера. Подходит для личного использования и небольших потребностей в безопасности.",
+          guardian: "Разработан для пользователей, которым нужна комплексная защита от продвинутых угроз. Отлично подходит для профессионалов и бизнеса.",
+          commander: "Максимальное решение безопасности для высокорисковых сред. Идеально для специалистов по безопасности и организаций с критически важными данными."
+        },
+        features: {
+          watcher: [
+            "Скрытый мониторинг при запуске в режиме невидимости",
+            "Уведомления в Telegram в реальном времени для всех активностей",
+            "Базовое логирование активности и захват скриншотов",
+            "Email уведомления о подозрительном поведении",
+            "Простая установка и настройка"
+          ],
+          guardian: [
+            "Все возможности из Watcher Trial",
+            "Продвинутая система обнаружения угроз в реальном времени",
+            "Автоматическое отключение интернета при обнаружении высокого риска",
+            "Мониторинг камеры в реальном времени с детекцией движения",
+            "Улучшенный анализ активности и отчетность",
+            "Продвинутые возможности скриншотов и записи экрана"
+          ],
+          commander: [
+            "Все возможности из Guardian Trial",
+            "ИИ-система оценки подозрительности с анализом угроз",
+            "Автоматическое отключение интернета при высоком риске",
+            "Мониторинг веб-камеры в реальном времени с детекцией движения",
+            "Наблюдение через микрофон с анализом аудио",
+            "Продвинутый движок обнаружения RAT (троянов удаленного доступа)",
+            "Поведенческий анализ и обнаружение аномалий",
+            "Комплексное криминалистическое логирование и отчетность"
+          ]
+        }
+      }
+    };
+
+    let currentLang = 'en';
+
+    function translatePage() {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = currentLang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-ru');
+      });
+    }
+
+    function openModal(plan) {
+      const modal = document.getElementById('planModal');
+      const title = document.getElementById('modalTitle');
+      const usage = document.getElementById('modalUsage');
+      const featuresList = document.getElementById('modalFeatures');
+
+      title.textContent = translations[currentLang][plan];
+      usage.textContent = translations[currentLang].modalUsage[plan];
+
+      featuresList.innerHTML = '';
+      translations[currentLang].features[plan].forEach(feature => {
+        const li = document.createElement('li');
+        li.className = 'mb-2';
+        li.innerHTML = `<span class="text-green-500 mr-2">✔️</span>${feature}`;
+        featuresList.appendChild(li);
+      });
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('planModal').classList.add('hidden');
+    }
+
+    // Close modal when clicking outside of it
+    document.getElementById('planModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'ru' : 'en';
+      translatePage();
+    }
+
+    // Toggle mobile menu
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    });
+
+    // Language toggles
+    document.getElementById('languageToggle').addEventListener('click', toggleLanguage);
+    document.getElementById('languageToggleMobile').addEventListener('click', toggleLanguage);
+
+    // Product prices
+    const productPrices = {
+      'watcher': { name: 'Watcher Trial', price: 2.00 },
+      'guardian': { name: 'Guardian Trial', price: 19.99 },
+      'commander': { name: 'Commander Trial', price: 39.99 }
+    };
+
+    let currentPayPalButtons = null;
+
+    function updateProductSelection() {
+      const productSelect = document.getElementById('product-selection');
+      const selectedProduct = productSelect.value;
+      const productInfo = document.getElementById('selected-product-info');
+      const productName = document.getElementById('selected-product-name');
+      const productPrice = document.getElementById('selected-product-price');
+      const paypalContainer = document.getElementById('paypal-button-container');
+
+      if (selectedProduct && productPrices[selectedProduct]) {
+        const product = productPrices[selectedProduct];
+        productName.textContent = product.name;
+        productPrice.textContent = product.price.toFixed(2);
+        productInfo.classList.remove('hidden');
+
+        // Clear existing PayPal buttons
+        if (currentPayPalButtons) {
+          paypalContainer.innerHTML = '';
         }
 
-        function showPaymentSection() {
-            document.getElementById('products').style.display = 'none';
-            document.getElementById('payment').style.display = 'block';
-            
-            // Update selected product display
-            const productDisplay = document.getElementById('selected-product');
-            productDisplay.innerHTML = `
-                <h4 class="font-bold text-lg">${selectedProduct.name}</h4>
-                <p class="text-gray-600">${selectedProduct.description}</p>
-                <p class="text-2xl font-bold text-purple-600 mt-2">$${selectedProduct.price}</p>
-            `;
+        // Check if user info is filled
+        const email = document.getElementById('user-email').value;
+        const name = document.getElementById('user-name').value;
 
-            // Render PayPal button if not already rendered
-            if (!paypalButtonRendered) {
-                renderPayPalButton();
-            }
+        if (email && name && validateEmail(email)) {
+          renderPayPalButtons(selectedProduct, product.price);
+        } else {
+          paypalContainer.innerHTML = '<p class="text-gray-500 text-sm" data-en="Please fill in your email and name" data-ru="Пожалуйста, заполните email и имя">Please fill in your email and name</p>';
         }
+      } else {
+        productInfo.classList.add('hidden');
+        paypalContainer.innerHTML = '<p class="text-gray-500 text-sm" data-en="Please select a plan" data-ru="Пожалуйста, выберите план">Please select a plan</p>';
+      }
+    }
 
-        function renderPayPalButton() {
-            paypal.Buttons({
-                createOrder: function(data, actions) {
-                    const email = document.getElementById('email').value;
-                    if (!email) {
-                        alert('Please enter your email address');
-                        return;
-                    }
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
 
-                    return fetch('/api/payment/create', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            email: email,
-                            product_id: selectedProduct.id
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            return data.data.payment_id;
-                        } else {
-                            throw new Error(data.error);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error creating payment:', error);
-                        alert('Error creating payment: ' + error.message);
-                    });
-                },
-                onApprove: function(data, actions) {
-                    return fetch('/api/payment/execute', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            paymentID: data.paymentID,
-                            payerID: data.payerID
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            showSuccessSection(data.data);
-                        } else {
-                            throw new Error(data.error);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error executing payment:', error);
-                        alert('Error processing payment: ' + error.message);
-                    });
-                },
-                onError: function(err) {
-                    console.error('PayPal error:', err);
-                    alert('Payment error occurred. Please try again.');
-                }
-            }).render('#paypal-button-container');
-            
-            paypalButtonRendered = true;
+    function renderPayPalButtons(productId, price) {
+      const paypalContainer = document.getElementById('paypal-button-container');
+
+      if (typeof paypal !== 'undefined') {
+        currentPayPalButtons = paypal.Buttons({
+          style: {
+            layout: 'horizontal',
+            color: 'blue',
+            shape: 'pill',
+            label: 'pay',
+            height: 48
+          },
+          createOrder: function(data, actions) {
+            const email = document.getElementById('user-email').value;
+            const name = document.getElementById('user-name').value;
+            const country = document.getElementById('user-country').value;
+
+            // Create order with backend
+            return fetch('/api/create-payment', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                email: email,
+                product_id: productId,
+                name: name,
+                country: country
+              })
+            })
+            .then(response => {
+              // Check if response is actually JSON
+              const contentType = response.headers.get('content-type');
+              if (!contentType || !contentType.includes('application/json')) {
+                throw new Error(currentLang === 'en' ? 
+                  'Server error: Payment server may not be running. Please contact support.' : 
+                  'Ошибка сервера: Сервер оплаты может не работать. Обратитесь в поддержку.');
+              }
+              return response.json();
+            })
+            .then(data => {
+              if (data.approval_url) {
+                // Redirect to PayPal for approval
+                window.location.href = data.approval_url;
+                return;
+              } else {
+                throw new Error(data.error || 'Payment creation failed');
+              }
+            })
+            .catch(error => {
+              console.error('Payment creation error:', error);
+              alert(currentLang === 'en' ? 'Payment creation failed: ' + error.message : 'Ошибка создания платежа: ' + error.message);
+            });
+          },
+          onApprove: function(data, actions) {
+            // Execute payment with backend
+            return fetch('/api/execute-payment', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                paymentID: data.paymentID,
+                payerID: data.payerID
+              })
+            })
+            .then(response => {
+              // Check if response is actually JSON
+              const contentType = response.headers.get('content-type');
+              if (!contentType || !contentType.includes('application/json')) {
+                throw new Error(currentLang === 'en' ? 
+                  'Server error: Payment server may not be running. Please contact support.' : 
+                  'Ошибка сервера: Сервер оплаты может не работать. Обратитесь в поддержку.');
+              }
+              return response.json();
+            })
+            .then(result => {
+              if (result.success) {
+                alert(currentLang === 'en' ? 
+                  `✅ Payment successful! Your activation key: ${result.activation_key}\n\nCheck your email for download instructions.` : 
+                  `✅ Оплата успешна! Ваш ключ активации: ${result.activation_key}\n\nПроверьте email для инструкций по загрузке.`);
+
+                // Optionally redirect to download page
+                setTimeout(() => {
+                  window.open(result.download_link, '_blank');
+                }, 2000);
+              } else {
+                throw new Error(result.error || 'Payment execution failed');
+              }
+            })
+            .catch(error => {
+              console.error('Payment execution error:', error);
+              alert(currentLang === 'en' ? 'Payment execution failed: ' + error.message : 'Ошибка выполнения платежа: ' + error.message);
+            });
+          },
+          onError: function(err) {
+            console.error('PayPal error:', err);
+            alert(currentLang === 'en' ? 'PayPal error occurred. Please try again.' : 'Произошла ошибка PayPal. Попробуйте снова.');
+          }
+        });
+
+        currentPayPalButtons.render('#paypal-button-container');
+      } else {
+        paypalContainer.innerHTML = '<p class="text-red-500 text-sm">PayPal SDK not loaded. Please refresh the page.</p>';
+      }
+    }
+
+    // Event listeners for form updates
+    document.getElementById('user-email').addEventListener('input', updateProductSelection);
+    document.getElementById('user-name').addEventListener('input', updateProductSelection);
+    document.getElementById('product-selection').addEventListener('change', updateProductSelection);
+
+    // Card number formatting
+    document.getElementById('card-number').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+      let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+      if (formattedValue !== e.target.value) {
+        e.target.value = formattedValue;
+      }
+    });
+
+    // Expiry date formatting
+    document.getElementById('expiry-date').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+      }
+      e.target.value = value;
+    });
+
+    // CVV formatting
+    document.getElementById('cvv').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    // Card Payment Form Submission
+    document.getElementById('cardPaymentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const email = document.getElementById('user-email').value;
+      const name = document.getElementById('user-name').value;
+      const country = document.getElementById('user-country').value;
+      const selectedProduct = document.getElementById('product-selection').value;
+      const cardNumber = document.getElementById('card-number').value;
+      const expiryDate = document.getElementById('expiry-date').value;
+      const cvv = document.getElementById('cvv').value;
+      const cardholderName = document.getElementById('cardholder-name').value;
+
+      // Basic validation
+      if (!email || !name || !country || !selectedProduct || !cardNumber || !expiryDate || !cvv || !cardholderName) {
+        alert(currentLang === 'en' ? 'Please fill in all fields' : 'Пожалуйста, заполните все поля');
+        return;
+      }
+
+      if (!validateEmail(email)) {
+        alert(currentLang === 'en' ? 'Please enter a valid email address' : 'Пожалуйста, введите действительный email адрес');
+        return;
+      }
+
+      const submitButton = e.target.querySelector('button[type="submit"]');
+      const originalText = submitButton.innerHTML;
+      submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (currentLang === 'en' ? 'Processing...' : 'Обработка...');
+      submitButton.disabled = true;
+
+      // Send payment data to server
+      fetch('/api/process-card-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          name: name,
+          country: country,
+          product_id: selectedProduct,
+          card_details: {
+            number: cardNumber,
+            expiry: expiryDate,
+            cvv: cvv,
+            name: cardholderName
+          }
+        })
+      })
+      .then(response => {
+        // Check if response is actually JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error(currentLang === 'en' ? 
+            'Server error: Payment server may not be running. Please contact support.' : 
+            'Ошибка сервера: Сервер оплаты может не работать. Обратитесь в поддержку.');
         }
+        return response.json();
+      })
+      .then(result => {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalText;
 
-        function showSuccessSection(paymentData) {
-            document.getElementById('payment').style.display = 'none';
-            document.getElementById('success').style.display = 'block';
-            
-            // Update download info
-            const downloadInfo = document.getElementById('download-info');
-            downloadInfo.innerHTML = `
-                <h4 class="font-bold mb-2">Download Information</h4>
-                <p class="text-sm text-gray-600 mb-2">Activation Key: <code class="bg-gray-200 px-2 py-1 rounded">${paymentData.activation_key}</code></p>
-                <p class="text-sm text-gray-600">Download link has been sent to your email address.</p>
-            `;
-        }
+        if (result.success) {
+          alert(currentLang === 'en' ? 
+            `✅ Payment successful! Your activation key: ${result.activation_key}\n\nCheck your email for download instructions.` : 
+            `✅ Оплата успешна! Ваш ключ активации: ${result.activation_key}\n\nПроверьте email для инструкций по загрузке.`);
 
-        function goBack() {
-            document.getElementById('payment').style.display = 'none';
-            document.getElementById('products').style.display = 'block';
-        }
+          e.target.reset();
 
-        function startOver() {
-            document.getElementById('success').style.display = 'none';
-            document.getElementById('products').style.display = 'block';
-            selectedProduct = null;
-            paypalButtonRendered = false;
-            document.getElementById('email').value = '';
+          // Optionally redirect to download page
+          setTimeout(() => {
+            window.open(result.download_link, '_blank');
+          }, 2000);
+        } else {
+          throw new Error(result.error || 'Payment processing failed');
         }
-    </script>
+      })
+      .catch(error => {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalText;
+        console.error('Card payment error:', error);
+        alert(currentLang === 'en' ? 'Payment failed: ' + error.message : 'Ошибка оплаты: ' + error.message);
+      });
+    });
+
+    // Contact Form Submission
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const name = formData.get('name');
+      const email = formData.get('email');
+      const message = formData.get('message');
+
+      const submitButton = e.target.querySelector('button[type="submit"]');
+      const originalText = submitButton.innerHTML;
+      submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (currentLang === 'en' ? 'Sending...' : 'Отправка...');
+      submitButton.disabled = true;
+
+      // Send contact form data to server
+      fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          message: message
+        })
+      })
+      .then(response => {
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error(currentLang === 'en' ? 
+            'Server error: Contact server may not be running. Please try again later.' : 
+            'Ошибка сервера: Сервер контактов может не работать. Попробуйте позже.');
+        }
+        return response.json();
+      })
+      .then(result => {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalText;
+
+        if (result.success) {
+          alert(currentLang === 'en' ? 
+            '✅ Your message has been sent successfully! We will get back to you soon.' : 
+            '✅ Ваше сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.');
+          e.target.reset();
+        } else {
+          throw new Error(result.error || 'Failed to send message');
+        }
+      })
+      .catch(error => {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalText;
+        console.error('Contact form error:', error);
+        alert(currentLang === 'en' ? 
+          'Failed to send message: ' + error.message : 
+          'Не удалось отправить сообщение: ' + error.message);
+      });
+    });
+
+    // Initial translation
+    translatePage();
+  </script>
 </body>
 </html>
