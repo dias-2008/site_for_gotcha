@@ -29,6 +29,7 @@ services:
       - LOG_DIR=/app/logs
       - PRODUCT_FILES_DIR=/app/products
       - BACKUP_DIR=/app/backups
+      - RATE_LIMIT_STORAGE_URI=redis://redis:6379/0  # Use Redis for rate limiting
     env_file:
       - .env
     volumes:
