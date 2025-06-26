@@ -33,7 +33,12 @@ from src.models.database import DatabaseManager
 from src.services.email_service import EmailService
 from src.services.payment_service import PaymentService
 from src.services.product_service import ProductService
-from src.validators import validate_email, validate_activation_key, generate_activation_key
+from src.validators import (
+    validate_email, 
+    validate_activation_key, 
+    generate_activation_key,
+    ContactFormSchema
+)
 from src.utils.security import secure_filename
 from src.utils.logging_config import setup_logging
 
@@ -237,7 +242,7 @@ def handle_contact():
         log_request_info()
         
         # Validate input
-        schema = ContactSchema()
+        schema = ContactFormSchema()  # Now properly imported
         data = schema.load(request.get_json() or {})
         
         # Send contact email
@@ -260,7 +265,10 @@ def handle_contact():
             )), 500
             
     except ValidationError as e:
-        raise e  # Let the error handler deal with it
+        logger.error(f"Contact form validation error: {str(e)}")
+        return jsonify(create_error_response(
+            f"Validation error: {str(e.messages)}"
+        )), 400
     except Exception as e:
         logger.error(f"Contact form error: {str(e)}")
         return jsonify(create_error_response(
