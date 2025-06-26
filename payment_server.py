@@ -242,7 +242,7 @@ def handle_contact():
         log_request_info()
         
         # Validate input
-        schema = ContactFormSchema()  # Now properly imported
+        schema = ContactSchema()
         data = schema.load(request.get_json() or {})
         
         # Send contact email
@@ -265,10 +265,7 @@ def handle_contact():
             )), 500
             
     except ValidationError as e:
-        logger.error(f"Contact form validation error: {str(e)}")
-        return jsonify(create_error_response(
-            f"Validation error: {str(e.messages)}"
-        )), 400
+        raise e  # Let the error handler deal with it
     except Exception as e:
         logger.error(f"Contact form error: {str(e)}")
         return jsonify(create_error_response(
