@@ -77,8 +77,8 @@ logger = loggers['app']
 # Initialize services
 db_manager = DatabaseManager(config)
 email_service = EmailService(config)
-payment_service = PaymentService(config)
-product_service = ProductService(config)
+payment_service = PaymentService(config, db_manager)
+product_service = ProductService(config, db_manager)
 
 # Request validation schemas
 class ContactSchema(Schema):
