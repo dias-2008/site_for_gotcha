@@ -63,13 +63,21 @@ class RequestContextFilter(logging.Filter):
     """Filter to add request context to log records"""
     
     def filter(self, record):
-        # Add request ID if available
-        if hasattr(g, 'request_id'):
-            record.request_id = g.request_id
+        # Safely add request ID if available
+        try:
+            if hasattr(g, 'request_id'):
+                record.request_id = g.request_id
+        except RuntimeError:
+            # Outside application context
+            pass
         
-        # Add user ID if available
-        if hasattr(g, 'user_id'):
-            record.user_id = g.user_id
+        # Safely add user ID if available
+        try:
+            if hasattr(g, 'user_id'):
+                record.user_id = g.user_id
+        except RuntimeError:
+            # Outside application context
+            pass
         
         # Add IP address if request context is available
         try:
