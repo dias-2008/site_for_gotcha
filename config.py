@@ -49,6 +49,7 @@ class Config:
     RATE_LIMIT_ENABLED: bool = os.getenv('RATE_LIMIT_ENABLED', 'True').lower() in ('true', '1', 'yes')
     RATE_LIMIT_DEFAULT: str = os.getenv('RATE_LIMIT_DEFAULT', '100 per hour')
     RATE_LIMIT_PAYMENT: str = os.getenv('RATE_LIMIT_PAYMENT', '10 per hour')
+    RATE_LIMIT_STORAGE_URI: str = os.getenv('RATE_LIMIT_STORAGE_URI', 'memory://')  # Use Redis in production: redis://localhost:6379/0
     
     # File Upload Configuration
     MAX_CONTENT_LENGTH: int = int(os.getenv('MAX_CONTENT_LENGTH', '16777216'))  # 16MB
@@ -56,7 +57,7 @@ class Config:
     
     # Logging Configuration
     LOG_LEVEL: str = os.getenv('LOG_LEVEL', 'INFO')
-    LOG_FILE: str = os.getenv('LOG_FILE', 'payment_server.log')
+    LOG_FILE: str = os.getenv('LOG_FILE', './logs/payment_server.log')
     LOG_MAX_BYTES: int = int(os.getenv('LOG_MAX_BYTES', '10485760'))  # 10MB
     LOG_BACKUP_COUNT: int = int(os.getenv('LOG_BACKUP_COUNT', '5'))
     
