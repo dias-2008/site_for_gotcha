@@ -58,7 +58,8 @@ if config.RATE_LIMIT_ENABLED:
     limiter = Limiter(
         key_func=get_remote_address,
         app=app,
-        default_limits=[config.RATE_LIMIT_DEFAULT]
+        default_limits=[config.RATE_LIMIT_DEFAULT],
+        storage_uri=config.RATE_LIMIT_STORAGE_URI
     )
 else:
     limiter = None
